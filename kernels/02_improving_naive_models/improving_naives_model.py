@@ -104,7 +104,7 @@ def grid_LogisticRegression(df=None) :
 
     params          = { "penalty":["l2"],
                         "dual":[True],
-                        "tol"::np.logspace(-6, 2, 9),
+                        "tol":np.logspace(-6, 2, 9),
                         "C":np.logspace(-4, 2, 7),
                         "fit_intercept":[True],
                         "intercept_scaling":[1],
