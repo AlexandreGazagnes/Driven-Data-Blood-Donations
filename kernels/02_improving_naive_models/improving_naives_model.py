@@ -60,7 +60,7 @@ def run_grid(model, params, df=None, outliers=None, regularize=None) :
     if regularize : 
         raise ValueError("regularize funct not implemented yet")
         X = regularize(X)
-        
+
     t = split(X,y)
 
     cv          = 5
@@ -88,15 +88,32 @@ def run_grid(model, params, df=None, outliers=None, regularize=None) :
 
 def grid_LogisticRegression(df=None) : 
 
-    default_params  = {}
+    default_params  = { "penalty":["l2"],
+                        "dual":[False],
+                        "tol":[0.0001],
+                        "C":[1.0],
+                        "fit_intercept":[True],
+                        "intercept_scaling":[1],
+                        "class_weight":[None],
+                        "solver":["liblinear"],
+                        "max_iter":[100],
+                        "multi_class":["ovr"],
+                        "warm_start":[False],   }
 
     none_params     = {}
 
-    params          = { "penalty"     : ["l1", "l2"], #   "solver"    : [   "newton-cg", "lbfgs", "liblinear", "sag", "saga"],
-                        "warm_start"  : [True, False], 
-                        "tol"         : np.logspace(-6, 2, 9),
-                        "C"           : np.logspace(-4, 2, 7), 
-                        "max_iter"    : np.logspace(3, 5, 3)    } # "multi_class" : ["ovr", "multinomial"]
+    params          = { "penalty":["l2"],
+                        "dual":[True],
+                        "tol"::np.logspace(-6, 2, 9),
+                        "C":np.logspace(-4, 2, 7),
+                        "fit_intercept":[True],
+                        "intercept_scaling":[1],
+                        "class_weight":[None],
+                        "loss":["hinge","squared_hinge"],
+                        "solver":["liblinear"],
+                        "max_iter":np.logspace(3, 5, 3),
+                        "multi_class":["ovr","crammer_singer" ],
+                        "warm_start":[False, True],   }
 
     model           = LogisticRegression()
     grid            = run_grid(model, params, None)
@@ -119,20 +136,7 @@ def grid_RidgeClassifier(df=None):
 
 def grid_LinearSVC(df=None):
 
-    default_params  = {}
 
-    none_params     = {}
-
-    params          = { "penalty":["l2"], # "l1"
-                        "loss":["hinge","squared_hinge"], 
-                        "dual":[True], # False
-                        "tol":np.logspace(-6, 2, 9), 
-                        "C":np.logspace(-4, 2, 7), 
-                        "multi_class":["ovr","crammer_singer" ],
-                        "fit_intercept":[True], 
-                        "intercept_scaling":[1,], 
-                        "class_weight":[None,], 
-                        "max_iter"  : np.logspace(3, 5, 3)      }
 
     model   = LinearSVC()
     grid    = run_grid(model, params, None)
@@ -170,6 +174,8 @@ def grid_KNeighborsClassifier(df=None):
     default_params  = {}
 
     none_params     = {}
+
+    params          = {}
 
     model   = KNeighborsClassifier()
     grid    = run_grid(model, params, None)
@@ -336,4 +342,5 @@ MODELS = [      naive_model,
 
 # results = first_approch_of_feat_eng(results, [1.5, 2.0, 2.5, 3.0, 3.5])
     
+
 
