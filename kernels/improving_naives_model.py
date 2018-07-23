@@ -35,12 +35,32 @@ from first_naive_model import *
 
 # functions
 
-def run_grid(model, params, df=None) : 
+def run_grid(model, params, df=None, outliers=None, regularize=None) : 
+
+    comment=str()
 
     if not isinstance(df, pd.DataFrame): 
         df = first_tour()
-    
+
+    if outliers : 
+        try : 
+            outliers = float(outliers)
+        except :
+            raise ValueError("outliers params must be a float")
+
+        if not (1.4<= outliers <= 3.5)  :
+            raise ValueError("outliers must be 1.4<= outliers <= 3.5")
+
+    if outliers : 
+        comment+="outliers k= "+ str(outliers)
+        df = delete_outliers(df, outliers)
+     
     X,y = return_X_y(df)
+
+    if regularize : 
+        raise ValueError("regularize funct not implemented yet")
+        X = regularize(X)
+        
     t = split(X,y)
 
     cv          = 5
@@ -155,7 +175,7 @@ def grid_KNeighborsClassifier(df=None):
     grid    = run_grid(model, params, None)
 
     return grid
-    
+
 
 def grid_RandomForestClassifier(df=None):
 
