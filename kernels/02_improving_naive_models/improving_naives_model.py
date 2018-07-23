@@ -26,7 +26,6 @@ from sklearn.svm import LinearSVC, NuSVC
 
 from first_naive_model import *
 
-
 # consts 
 
 # COLUMNS = ["naive", "dummy", "basic", "features eng."]
@@ -35,7 +34,11 @@ from first_naive_model import *
 
 # functions
 
-def run_grid(model, params, df=None, outliers=None, regularize=None) : 
+def run_grid(   model, params, 
+                df=None, 
+                outliers=None, regularize=None,
+                cv=10, n_jobs=6, scoring="accuracy",
+                verbose=0) : 
 
     comment=str()
 
@@ -63,15 +66,12 @@ def run_grid(model, params, df=None, outliers=None, regularize=None) :
 
     t = split(X,y)
 
-    cv          = 5
-    n_jobs      = 6
-    scoring     = "accuracy"    # log_loss
     grid        = GridSearchCV( estimator=model, 
                                 param_grid=params,  
                                 cv=cv, 
                                 n_jobs=n_jobs,
                                 scoring=scoring, 
-                                verbose=1)
+                                verbose=verbose)
 
     X_train, X_test, y_train, y_test = t 
     grid.fit(X_train, y_train)
@@ -81,12 +81,13 @@ def run_grid(model, params, df=None, outliers=None, regularize=None) :
     info(grid.best_params_)
 
     y_pred = grid.predict(X_test)
-    info(accuracy_score(y_test, y_pred).round(3))
+    acc = accuracy_score(y_test, y_pred).round(3)
+    info(acc)
 
-    return grid
+    return acc, grid
 
 
-def grid_LogisticRegression(df=None) : 
+def grid_LogisticRegression(df=None, param=None) : 
 
     default_params  = { "penalty":["l2"],
                         "dual":[False],
@@ -115,61 +116,16 @@ def grid_LogisticRegression(df=None) :
                         "multi_class":["ovr","crammer_singer" ],
                         "warm_start":[False, True],   }
 
+    if not param :  param = none_params
+    else  :         param = params
+
     model           = LogisticRegression()
-    grid            = run_grid(model, params, None)
+    acc, grid       = run_grid(model, param, None)
 
     return grid
 
 
-def grid_RidgeClassifier(df=None):
-
-    default_params  = {}
-
-    none_params     = {}
-
-    model           = RidgeClassifier()
-    grid            = run_grid(model, params, None)
-
-    return grid
-
-
-
-def grid_LinearSVC(df=None):
-
-
-
-    model   = LinearSVC()
-    grid    = run_grid(model, params, None)
-
-    return grid
-
-
-def grid_NuSVC(df=None):
-
-    default_params  = {}
-
-    none_params     = {}
-
-    params          = { "nu":[0.5],
-                        "kernel":["rbf"],
-                        "degree":[3],
-                        "gamma":["auto"],
-                        "coef0":[0.0],
-                        "shrinking":[True],
-                        "probability":[False],
-                        "tol":[0.001],
-                        "_size":[200],
-                        "class_weight":[None],
-                        "max_iter":[-1],
-                        "decision_function_shape":["ovr"]}
-
-    model   = NuSVC()
-    grid    = run_grid(model, params, None)
-
-    return grid
-
-
-def grid_KNeighborsClassifier(df=None):
+def grid_RidgeClassifier(df=None, param=None):
 
     default_params  = {}
 
@@ -177,13 +133,79 @@ def grid_KNeighborsClassifier(df=None):
 
     params          = {}
 
-    model   = KNeighborsClassifier()
-    grid    = run_grid(model, params, None)
+    if not param :  param = none_params
+    else  :         param = params
+
+    model           = RidgeClassifier()
+    acc, grid       = run_grid(model, param, None)
 
     return grid
 
 
-def grid_RandomForestClassifier(df=None):
+
+def grid_LinearSVC(df=None, param=None):
+
+    default_params  = {}
+
+    none_params     = {}
+
+    params          = {}
+
+    if not param :  param = none_params
+    else  :         param = params
+
+    model   = LinearSVC()
+    grid    = run_grid(model, param, None)
+
+    return grid
+
+
+def grid_NuSVC(df=None, param=None):
+
+    # default_params  = {}
+
+    # none_params     = {}
+
+    # params          = { "nu":[0.5],
+    #                     "kernel":["rbf"],
+    #                     "degree":[3],
+    #                     "gamma":["auto"],
+    #                     "coef0":[0.0],
+    #                     "shrinking":[True],
+    #                     "probability":[False],
+    #                     "tol":[0.001],
+    #                     "_size":[200],
+    #                     "class_weight":[None],
+    #                     "max_iter":[-1],
+    #                     "decision_function_shape":["ovr"]}
+
+    # if not param :    param = none_params
+    # else  :       param = params
+
+    # model   = NuSVC()
+    # grid    = run_grid(model, param, None)
+
+    # return grid
+    return -1.0
+
+def grid_KNeighborsClassifier(df=None, param=None):
+
+    default_params  = {}
+
+    none_params     = {}
+
+    params          = {}
+
+    if not param :  param = none_params
+    else  :         param = params
+
+    model   = KNeighborsClassifier()
+    grid    = run_grid(model, param, None)
+
+    return grid
+
+
+def grid_RandomForestClassifier(df=None, param=None):
 
     default_params  = { "n_estimators" : [10],
                         "criterion" : ["gini"], # or    "entropy"
@@ -219,38 +241,49 @@ def grid_RandomForestClassifier(df=None):
                         "oob_score" : [True],
                         "warm_start" : [True],  }
 
+    if not param :  param = none_params
+    else  :         param = params
+
     model           = RandomForestClassifier()
-    grid            = run_grid(model, params, None)
+    acc, grid       = run_grid(model, param, None)
     
     return grid
 
 
-def grid_AdaBoostClassifier(df=None):
+def grid_AdaBoostClassifier(df=None, param=None):
 
     default_params  = {}
 
     none_params     = {}
+
+    if not param :  param = none_params
+    else  :         param = params
 
     model           = AdaBoostClassifier()
-    grid            = run_grid(model, params, None)
+    acc, grid       = run_grid(model, param, None)
     
     return grid
 
 
-def grid_Perceptron(df=None):
+def grid_Perceptron(df=None, param=None):
 
     default_params  = {}
 
     none_params     = {}
 
+    params          = {}
+
+    if not param :  param = none_params
+    else  :         param = params
+
     model           = Perceptron()
-    grid            = run_grid(model, params, None)
+    acc, grid       = run_grid(model, param, None)
     
     return grid
 
 
 
-def grid_MLPClassifier(df=None):
+def grid_MLPClassifier(df=None, param=None):
 
     default_params  = {}
 
@@ -288,16 +321,26 @@ def grid_MLPClassifier(df=None):
                         "beta_2": [0.999],   
                         "epsilon": [1e-08]}
 
-    model = MLPClassifier()
-    grid  = run_grid(model, params, None)
+    if not param :  param = none_params
+    else  :         param = params
 
-    return grid
+    model           = MLPClassifier()
+    acc, grid       = run_grid(model, param, None)
+
+    return acc, grid
+
+
+def beep(freq=440, duration=3) : 
+
+    cmd = 'play --no-show-progress --null --channels 1 synth %s sine %f' % (duration, freq)
+    os.system(cmd)
 
 
 #############################################################
+#############################################################
 
-COLUMNS = [     "naive", 
-                "dummy", 
+
+COLUMNS = [     "dummy", 
                 "basic", 
 
                 "gridLR",
@@ -312,14 +355,12 @@ COLUMNS = [     "naive",
 
                 "gridAda", 
 
-                "gridPer"
+                "gridPer",
                 "gridMLP",
 
                 "features eng."]
 
-
-MODELS = [      naive_model, 
-                dummy_model, 
+MODELS = [      dummy_model, 
                 basic_model, 
 
                 grid_LogisticRegression,
@@ -338,7 +379,29 @@ MODELS = [      naive_model,
                 grid_MLPClassifier]
 
 
+#############################################################
 ##############################################################
+
+
+def benchmark_various_grid_once(col, mod, n=10) : 
+
+    results     = [model_accuracy_mean(m, n, None) for m in MODELS]
+    results     = pd.Series(results, index=col[:-1])
+
+    return results
+
+
+def benchmark_various_grid_multi(col, mod, N=10, n=10) : 
+
+    benchmark   = benchmark_various_grid_once
+    series      = [benchmark(col, mod, n) for i in range(N)]
+    results     = pd.DataFrame(series, columns=col[:-1])
+
+    return results
+
+
+
+
 
 # results = first_approch_of_feat_eng(results, [1.5, 2.0, 2.5, 3.0, 3.5])
     
