@@ -234,7 +234,7 @@ def first_tour(folder="data", file=TRAIN_FILE) :
 
     # build data path
     path = finding_master_path(folder)
-	# info(path)							# UNCOMMENT IF NEEDED
+    # info(path)                            # UNCOMMENT IF NEEDED
 
     # just show dataset list
     # datasets = return_datasets(path)      # UNCOMMENT IF NEEDED

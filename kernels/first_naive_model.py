@@ -47,90 +47,90 @@ from first_tour import *
 
 
 def return_X_y(df) : 
-	""" """
+    """ """
 
-	X = df.drop("target", axis=1)
-	y = df.target
+    X = df.drop("target", axis=1)
+    y = df.target
 
-	return X, y  
+    return X, y  
 
 
 def naive_model(df=None) : 
-	""" """
-	if not isinstance(df, pd.DataFrame): 
-		df = first_tour()
+    """ """
+    if not isinstance(df, pd.DataFrame): 
+        df = first_tour()
 
-	X,y = return_X_y(df)
-	t = split(X,y)
+    X,y = return_X_y(df)
+    t = split(X,y)
 
-	X_train, X_test, y_train, y_test = t 
+    X_train, X_test, y_train, y_test = t 
 
-	freq = y_test.value_counts() / len(y_test)
-		
-	y_pred = np.random.binomial(1, freq[1], len(y_test))
-	y_pred = pd.Series(y_pred)
+    freq = y_test.value_counts() / len(y_test)
+        
+    y_pred = np.random.binomial(1, freq[1], len(y_test))
+    y_pred = pd.Series(y_pred)
 
-	return accuracy_score(y_test, y_pred).round(3)
+    return accuracy_score(y_test, y_pred).round(3)
 
 
 def split(X,y) : 
-	""" """
+    """ """
 
-	func = train_test_split
-	tup = train_test_split(X, y)
-	
-	return tup
+    func = train_test_split
+    tup = train_test_split(X, y)
+    
+    return tup
 
 
 def dummy_model(df=None) : 
-	""" """
+    """ """
 
-	if not isinstance(df, pd.DataFrame): 
-		df = first_tour()
-	
-	X,y = return_X_y(df)
-	t = split(X,y)
+    if not isinstance(df, pd.DataFrame): 
+        df = first_tour()
+    
+    X,y = return_X_y(df)
+    t = split(X,y)
 
 
-	X_train, X_test, y_train, y_test = t 
+    X_train, X_test, y_train, y_test = t 
 
-	model = DummyClassifier()
-	model.fit(X_train, y_train)
-	y_pred = model.predict(X_test)
+    model = DummyClassifier()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
 
-	return accuracy_score(y_test, y_pred).round(3)
+    return accuracy_score(y_test, y_pred).round(3)
 
 
 def basic_model(df=None) : 
-	""" """
+    """ """
 
-	if not isinstance(df, pd.DataFrame): 
-		df = first_tour()
-	
-	X,y = return_X_y(df)
-	t = split(X,y)
+    if not isinstance(df, pd.DataFrame): 
+        df = first_tour()
+    
+    X,y = return_X_y(df)
+    t = split(X,y)
 
 
-	X_train, X_test, y_train, y_test = t 
+    X_train, X_test, y_train, y_test = t 
 
-	model = LogisticRegression()
-	model.fit(X_train, y_train)
-	y_pred = model.predict(X_test)
+    model = LogisticRegression()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
 
-	return accuracy_score(y_test, y_pred).round(3)
+    return accuracy_score(y_test, y_pred).round(3)
 
 
 def model_accuracy_mean(model, nb=5, df=None) : 
-	""" """
+    """ """
 
-	scores = [model(df) for i in range(nb)]
+    scores = [model(df) for i in range(nb)]
 
-	info(type(scores))
-	info(type(range(nb)))
+    info(type(scores))
+    info(type(range(nb)))
 
-	score = sum(scores)/len(scores)
+    score = sum(scores)/len(scores)
 
-	return score.round(3)
+    return score.round(3)
 
 
 
@@ -140,70 +140,70 @@ MODELS = [naive_model, dummy_model, basic_model]
 
 
 def add_new_results(results=None, feat_com=None, n=5, 
-					models=MODELS, columns= COLUMNS, 
-					df=None) : 
-	""" """
-	
-	if not isinstance(results, pd.DataFrame) : 
-		results = pd.DataFrame(columns=columns)
+                    models=MODELS, columns= COLUMNS, 
+                    df=None) : 
+    """ """
+    
+    if not isinstance(results, pd.DataFrame) : 
+        results = pd.DataFrame(columns=columns)
 
-	new = [model_accuracy_mean(i, n, df) for i in models]
-	info(new)
+    new = [model_accuracy_mean(i, n, df) for i in models]
+    info(new)
 
-	if not feat_com : 
-		feat_com = "No comment"
+    if not feat_com : 
+        feat_com = "No comment"
 
-	new.append(feat_com)
-	info(new)
-	
-	new = pd.Series(new, index=columns)
-	info(new)
-	
-	results = results.append(new, ignore_index=True)
-	info(results)
+    new.append(feat_com)
+    info(new)
+    
+    new = pd.Series(new, index=columns)
+    info(new)
+    
+    results = results.append(new, ignore_index=True)
+    info(results)
 
-	return results
-
-
-def first_approch_of_feat_eng(	drop_list,
-								results=None,
-								n=5, 
-								models=MODELS, columns= COLUMNS, 
-								df=None) : 
-	""" """
-	
-	if not isinstance(drop_list, list) : 
-		raise TypeError
-
-	if not isinstance(results, pd.DataFrame) : 
-		results = pd.DataFrame(columns=columns)
-
-	for i in drop_list : 
-
-		df = first_tour()
-		df = delete_outliers(df, i) 
-
-		feat_com = "drop outliers > " + str(i)
-
-		results = add_new_results(	results=results,
-									feat_com=feat_com,
-									n=n, 
-									models=models, 
-									columns=columns, 
-									df=df)
+    return results
 
 
-	return results
+def first_approch_of_feat_eng(  drop_list,
+                                results=None,
+                                n=5, 
+                                models=MODELS, columns= COLUMNS, 
+                                df=None) : 
+    """ """
+    
+    if not isinstance(drop_list, list) : 
+        raise TypeError
+
+    if not isinstance(results, pd.DataFrame) : 
+        results = pd.DataFrame(columns=columns)
+
+    for i in drop_list : 
+
+        df = first_tour()
+        df = delete_outliers(df, i) 
+
+        feat_com = "drop outliers > " + str(i)
+
+        results = add_new_results(  results=results,
+                                    feat_com=feat_com,
+                                    n=n, 
+                                    models=models, 
+                                    columns=columns, 
+                                    df=df)
+
+
+    return results
 
 
 def first_naive_model() : 
-	""" """	
+    """ """ 
 
-	results = pd.DataFrame(columns=COLUMNS)
-	results = add_new_results(results, "without_any_feat_eng")
+    results = pd.DataFrame(columns=COLUMNS)
+    results = add_new_results(results, "without_any_feat_eng")
 
-	results = first_approch_of_feat_eng([1.5, 2.0, 2.5, 3.0, 3.5])
-	
-	return results
+    results = first_approch_of_feat_eng([1.5, 2.0, 2.5, 3.0, 3.5])
+    
+    return results
 
 
