@@ -1,0 +1,784 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{first\_tour}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{c+ch}{\PYZsh{}!/usr/bin/env python3}
+        \PY{c+c1}{\PYZsh{}\PYZhy{}*\PYZhy{} coding: utf8 \PYZhy{}*\PYZhy{}}
+        
+        
+        \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{00\PYZhy{}first\PYZhy{}tour.py}
+        \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        
+        
+        \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{find here a first study of the dataset, in which we seek to understand and}
+        \PY{l+s+sd}{give meaning to the dataset.}
+        \PY{l+s+sd}{we are not trying to solve our problem but will focus on visualization,}
+        \PY{l+s+sd}{clenaning and feature engineering.}
+        \PY{l+s+sd}{at first we will just study the corelations, the links, the quality and the}
+        \PY{l+s+sd}{meaning of our dataset.}
+        \PY{l+s+sd}{external research and more general considerations may be included in this work}
+        \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}1}]:} '\textbackslash{}nfind here a first study of the dataset, in which we seek to understand and\textbackslash{}ngive meaning to the dataset.\textbackslash{}nwe are not trying to solve our problem but will focus on visualization,\textbackslash{}nclenaning and feature engineering.\textbackslash{}nat first we will just study the corelations, the links, the quality and the\textbackslash{}nmeaning of our dataset.\textbackslash{}nexternal research and more general considerations may be included in this work\textbackslash{}n'
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{c+c1}{\PYZsh{} import}
+        
+        \PY{k+kn}{import} \PY{n+nn}{os}\PY{o}{,} \PY{n+nn}{sys}\PY{o}{,} \PY{n+nn}{logging}\PY{o}{,} \PY{n+nn}{random}
+        
+        \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+        \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        
+        \PY{k+kn}{from} \PY{n+nn}{matplotlib} \PY{k}{import} \PY{n}{pyplot} \PY{k}{as} \PY{n}{plt}
+        \PY{k+kn}{import} \PY{n+nn}{seaborn} \PY{k}{as} \PY{n+nn}{sns}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{c+c1}{\PYZsh{} logging }
+        
+        \PY{n}{l} \PY{o}{=} \PY{n}{logging}\PY{o}{.}\PY{n}{WARNING}
+        \PY{n}{logging}\PY{o}{.}\PY{n}{basicConfig}\PY{p}{(}\PY{n}{level}\PY{o}{=}\PY{n}{l}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZpc{}(levelname)s}\PY{l+s+s2}{ : }\PY{l+s+si}{\PYZpc{}(message)s}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{info} \PY{o}{=} \PY{n}{logging}\PY{o}{.}\PY{n}{info}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{c+c1}{\PYZsh{} graph}
+        
+        \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+        \PY{n}{sns}\PY{o}{.}\PY{n}{set}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{c+c1}{\PYZsh{} consts}
+        
+        \PY{n}{FOLDER}      \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Driven\PYZhy{}Data\PYZhy{}Blood\PYZhy{}Donations}\PY{l+s+s2}{\PYZdq{}}
+        \PY{n}{TRAIN\PYZus{}FILE}  \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{training\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}
+        \PY{n}{TEST\PYZus{}FILE}   \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}data.csv}\PY{l+s+s2}{\PYZdq{}}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{c+c1}{\PYZsh{} First : just find our data folder in the repo structure from anywhere}
+        
+        
+        \PY{k}{def} \PY{n+nf}{finding\PYZus{}master\PYZus{}path}\PY{p}{(}\PY{n}{folder}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{data}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{p}{:}
+        
+            \PY{n}{path} \PY{o}{=} \PY{n}{os}\PY{o}{.}\PY{n}{getcwd}\PY{p}{(}\PY{p}{)}
+            \PY{n}{path} \PY{o}{=} \PY{n}{path}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        
+            \PY{n}{idx}  \PY{o}{=} \PY{n}{path}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{n}{FOLDER}\PY{p}{)}
+            \PY{n}{path} \PY{o}{=} \PY{n}{path}\PY{p}{[}\PY{p}{:}\PY{n}{idx}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]}
+            \PY{n}{folder} \PY{o}{=} \PY{n+nb}{str}\PY{p}{(}\PY{n}{folder}\PY{p}{)} \PY{o}{+} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/}\PY{l+s+s2}{\PYZdq{}}
+            \PY{n}{path}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{folder}\PY{p}{)}
+            
+            \PY{n}{path} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{path}\PY{p}{)}
+        
+            \PY{c+c1}{\PYZsh{} check if path is a valid path}
+            \PY{k}{if} \PY{o+ow}{not} \PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{isdir}\PY{p}{(}\PY{n}{path}\PY{p}{)} \PY{p}{:} 
+                \PY{k}{raise} \PY{n+ne}{NotADirectoryError}
+        
+            \PY{k}{return} \PY{n}{path}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+        
+        \PY{n}{path} \PY{o}{=} \PY{n}{finding\PYZus{}master\PYZus{}path}\PY{p}{(}\PY{p}{)}
+        \PY{n}{path}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}6}]:} '/home/alex/Driven-Data-Blood-Donations/data/'
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{c+c1}{\PYZsh{} Then : Control that our datafiles are Ok}
+        
+        \PY{k}{def} \PY{n+nf}{return\PYZus{}datasets}\PY{p}{(}\PY{n}{path}\PY{p}{)} \PY{p}{:} 
+            
+            \PY{n}{li} \PY{o}{=} \PY{p}{[}\PY{n}{i} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{os}\PY{o}{.}\PY{n}{listdir}\PY{p}{(}\PY{n}{path}\PY{p}{)} \PY{k}{if} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{.csv}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{in} \PY{n}{i} \PY{p}{]}
+            
+            \PY{k}{return} \PY{n}{li} 
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+        
+        \PY{n}{files} \PY{o}{=} \PY{n}{return\PYZus{}datasets}\PY{p}{(}\PY{n}{path}\PY{p}{)}
+        \PY{n}{files}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}7}]:} ['submission\_format.csv', 'test\_data.csv', 'training\_data.csv']
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{c+c1}{\PYZsh{} init our dataframe }
+        
+        \PY{k}{def} \PY{n+nf}{build\PYZus{}df}\PY{p}{(}\PY{n}{path}\PY{p}{,} \PY{n}{file}\PY{p}{)} \PY{p}{:} 
+        
+        
+            \PY{n}{df}          \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{n}{path}\PY{o}{+}\PY{n}{file}\PY{p}{,} \PY{n}{index\PYZus{}col}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+            \PY{n}{df}\PY{o}{.}\PY{n}{columns}  \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{Index}\PY{p}{(} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{last\PYZus{}don}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{num\PYZus{}don}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vol\PYZus{}don}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{first\PYZus{}don}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{target}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{object}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        
+        
+            \PY{k}{return} \PY{n}{df}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+        
+        \PY{n}{df} \PY{o}{=} \PY{n}{build\PYZus{}df}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/home/alex/Driven\PYZhy{}Data\PYZhy{}Blood\PYZhy{}Donations/data/}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{TRAIN\PYZus{}FILE}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} output contol}
+        \PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}8}]:}      last\_don  num\_don  vol\_don  first\_don  target
+        619         2       50    12500         98       1
+        664         0       13     3250         28       1
+        441         1       16     4000         35       1
+        160         2       20     5000         45       1
+        358         1       24     6000         77       0
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{c+c1}{\PYZsh{} let\PYZsq{}s have a first raw tour about this df}
+        
+        
+        \PY{k}{def} \PY{n+nf}{print\PYZus{}df}\PY{p}{(}\PY{n}{df}\PY{p}{)} \PY{p}{:} 
+            
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{ndim}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{dtypes}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{columns}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{tail}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{)}
+            
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+        
+        \PY{n}{print\PYZus{}df}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+2
+(576, 5)
+last\_don     int64
+num\_don      int64
+vol\_don      int64
+first\_don    int64
+target       int64
+dtype: object
+Int64Index([619, 664, 441, 160, 358, 335,  47, 164, 736, 436,
+            {\ldots}
+            361,  30, 337, 496, 169, 698, 433, 360, 541,  74],
+           dtype='int64', length=576)
+Index(['last\_don', 'num\_don', 'vol\_don', 'first\_don', 'target'], dtype='object')
+         last\_don     num\_don       vol\_don   first\_don      target
+count  576.000000  576.000000    576.000000  576.000000  576.000000
+mean     9.439236    5.427083   1356.770833   34.050347    0.239583
+std      8.175454    5.740010   1435.002556   24.227672    0.427200
+min      0.000000    1.000000    250.000000    2.000000    0.000000
+25\%      2.000000    2.000000    500.000000   16.000000    0.000000
+50\%      7.000000    4.000000   1000.000000   28.000000    0.000000
+75\%     14.000000    7.000000   1750.000000   49.250000    0.000000
+max     74.000000   50.000000  12500.000000   98.000000    1.000000
+     last\_don  num\_don  vol\_don  first\_don  target
+619         2       50    12500         98       1
+664         0       13     3250         28       1
+441         1       16     4000         35       1
+     last\_don  num\_don  vol\_don  first\_don  target
+360        21        2      500         52       0
+541        39        1      250         39       0
+74         72        1      250         72       0
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{c+c1}{\PYZsh{} let\PYZsq{}s retype our values to reduce mem usage (a little overkilled action? yes of course!)}
+         
+         \PY{k}{def} \PY{n+nf}{re\PYZus{}dtype}\PY{p}{(}\PY{n}{df}\PY{p}{)} \PY{p}{:} 
+         
+             \PY{c+c1}{\PYZsh{} li = [np.uint8, np.uint16]}
+             \PY{c+c1}{\PYZsh{} [print(i,  np.iinfo(i).min, np.iinfo(i).max) for i in li]}
+         
+             \PY{n}{dtypes\PYZus{}dict} \PY{o}{=} \PY{p}{\PYZob{}}     \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{last\PYZus{}don}\PY{l+s+s2}{\PYZdq{}}  \PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{uint8}\PY{p}{,} 
+                                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{num\PYZus{}don}\PY{l+s+s2}{\PYZdq{}}   \PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{uint8}\PY{p}{,}
+                                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vol\PYZus{}don}\PY{l+s+s2}{\PYZdq{}}   \PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{uint16}\PY{p}{,} 
+                                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{first\PYZus{}don}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{uint8}\PY{p}{,} 
+                                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{target}\PY{l+s+s2}{\PYZdq{}}    \PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{uint8}       \PY{p}{\PYZcb{}}
+         
+         
+             \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{n}{dtypes\PYZus{}dict}\PY{p}{)}
+         
+             \PY{k}{return} \PY{n}{df} 
+         
+         \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+         
+         \PY{n}{df} \PY{o}{=} \PY{n}{re\PYZus{}dtype}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+         \PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}10}]:}      last\_don  num\_don  vol\_don  first\_don  target
+         619         2       50    12500         98       1
+         664         0       13     3250         28       1
+         441         1       16     4000         35       1
+         160         2       20     5000         45       1
+         358         1       24     6000         77       0
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{c+c1}{\PYZsh{} let\PYZsq{}s have a second tour of our dataset but with graphical tools}
+         
+         \PY{k}{def} \PY{n+nf}{graph\PYZus{}each\PYZus{}feature}\PY{p}{(}\PY{n}{df}\PY{p}{)}  \PY{p}{:} 
+         
+             \PY{n}{features} \PY{o}{=} \PY{p}{[}\PY{n}{i} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{df}\PY{o}{.}\PY{n}{columns} \PY{k}{if} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{target}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{not} \PY{o+ow}{in} \PY{n}{i}\PY{p}{]} 
+         
+             \PY{n}{fig}\PY{p}{,} \PY{n}{\PYZus{}axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{13}\PY{p}{,}\PY{l+m+mi}{13}\PY{p}{)}\PY{p}{)}
+             \PY{n}{axes} \PY{o}{=} \PY{n}{\PYZus{}axes}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}
+         
+             \PY{n}{info}\PY{p}{(}\PY{n}{fig}\PY{p}{)}
+             \PY{n}{info}\PY{p}{(}\PY{n}{axes}\PY{p}{)}
+             \PY{n}{info}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{axes}\PY{p}{)}\PY{p}{)}
+         
+             \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{feat} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{features}\PY{p}{)} \PY{p}{:}
+                 \PY{n}{info}\PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{feat}\PY{p}{)}
+         
+                 \PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+                 \PY{c+c1}{\PYZsh{} sns.distplot \PYZhy{}\PYZhy{}\PYZgt{} (kde=True ) ???}
+                 \PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}
+         
+                 \PY{n}{axes}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{feat}\PY{p}{]}\PY{p}{,} \PY{n}{bins}\PY{o}{=}\PY{l+m+mi}{30}\PY{p}{)}
+                 \PY{n}{axes}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{n}{feat}\PY{p}{)}
+         
+             \PY{n}{plt}\PY{o}{.}\PY{n}{suptitle}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{features distribution}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+             
+         \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+         
+         
+         \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+         
+         \PY{n}{graph\PYZus{}each\PYZus{}feature}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_10_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{c+c1}{\PYZsh{} looking in depth : finding correlation between features}
+         
+         \PY{k}{def} \PY{n+nf}{graph\PYZus{}corr\PYZus{}matrix}\PY{p}{(}\PY{n}{df}\PY{p}{)} \PY{p}{:} 
+             
+             \PY{n}{corr\PYZus{}mat} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{corr}\PY{p}{(}\PY{p}{)}
+             \PY{n}{sns}\PY{o}{.}\PY{n}{heatmap}\PY{p}{(}\PY{n}{corr\PYZus{}mat}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{coolwarm}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{annot}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{.3g}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         
+             \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{correlation matrix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+             
+             \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+         
+         \PY{n}{graph\PYZus{}corr\PYZus{}matrix}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_11_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{c+c1}{\PYZsh{} so without doupt we can drop perfectly correlated features}
+         
+         \PY{k}{def} \PY{n+nf}{drop\PYZus{}corr\PYZus{}features}\PY{p}{(}\PY{n}{df}\PY{p}{)} \PY{p}{:} 
+         
+             \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vol\PYZus{}don}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         
+             \PY{k}{return} \PY{n}{df} 
+         
+         \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+         
+         \PY{n}{df} \PY{o}{=} \PY{n}{drop\PYZus{}corr\PYZus{}features}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+         \PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}13}]:}      last\_don  num\_don  first\_don  target
+         619         2       50         98       1
+         664         0       13         28       1
+         441         1       16         35       1
+         160         2       20         45       1
+         358         1       24         77       0
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{c+c1}{\PYZsh{} what about nas?}
+         
+         \PY{k}{def} \PY{n+nf}{study\PYZus{}nas}\PY{p}{(}\PY{n}{df}\PY{p}{)} \PY{p}{:} 
+         
+             \PY{n+nb}{print}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{isna}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{any}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+             \PY{n+nb}{print}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{isna}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{any}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+         
+         \PY{n}{study\PYZus{}nas}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+last\_don     False
+num\_don      False
+first\_don    False
+target       False
+dtype: bool
+last\_don     False
+num\_don      False
+first\_don    False
+target       False
+dtype: bool
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{c+c1}{\PYZsh{} ok perfect, too easy maybe...}
+         \PY{c+c1}{\PYZsh{} what about outliers ? }
+         
+         \PY{k}{def} \PY{n+nf}{study\PYZus{}outliers}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{k}\PY{o}{=}\PY{l+m+mf}{1.5}\PY{p}{)} \PY{p}{:} 
+             
+             \PY{n}{fig}\PY{p}{,} \PY{n}{\PYZus{}axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{13}\PY{p}{,}\PY{l+m+mi}{13}\PY{p}{)}\PY{p}{)}
+             \PY{n}{axes} \PY{o}{=} \PY{n}{\PYZus{}axes}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}
+         
+             \PY{n}{info}\PY{p}{(}\PY{n}{fig}\PY{p}{)}
+             \PY{n}{info}\PY{p}{(}\PY{n}{axes}\PY{p}{)}
+             \PY{n}{info}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{axes}\PY{p}{)}\PY{p}{)}
+         
+             \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{feat} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{columns}\PY{p}{)} \PY{p}{:}
+                 \PY{n}{info}\PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{feat}\PY{p}{)}
+         
+                 \PY{n}{axes}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{boxplot}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{feat}\PY{p}{]}\PY{p}{)}
+                 \PY{n}{axes}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{n}{feat}\PY{p}{)}
+         
+             
+             \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+         
+         \PY{n}{study\PYZus{}outliers}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{c+c1}{\PYZsh{} after all ! we have a first real data scientist job to do : cleaning! }
+         \PY{c+c1}{\PYZsh{} so we will design one function to be able to reshape our df at will}
+         
+         \PY{k}{def} \PY{n+nf}{return\PYZus{}outliers}\PY{p}{(}\PY{n}{ser}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{p}{:} 
+         
+             \PY{n}{desc} \PY{o}{=} \PY{n}{ser}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+             \PY{n}{q1}\PY{p}{,} \PY{n}{q3}\PY{p}{,} \PY{n}{q2} \PY{o}{=} \PY{n}{desc}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{25}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{desc}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{75}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{desc}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{50}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+             \PY{n}{IQ} \PY{o}{=} \PY{n}{q3}\PY{o}{\PYZhy{}}\PY{n}{q1}
+             \PY{n}{range\PYZus{}min}\PY{p}{,} \PY{n}{range\PYZus{}max} \PY{o}{=} \PY{n}{q1} \PY{o}{\PYZhy{}} \PY{n}{k} \PY{o}{*} \PY{n}{IQ}\PY{p}{,} \PY{n}{q3} \PY{o}{+} \PY{n}{k}\PY{o}{*}\PY{n}{IQ}
+         
+             \PY{c+c1}{\PYZsh{} outliers = ser[(ser \PYZgt{} range\PYZus{}max) or (ser \PYZlt{} range\PYZus{}min)]}
+             
+             \PY{k}{return} \PY{n}{ser} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{range\PYZus{}max}
+         
+         
+         \PY{k}{def} \PY{n+nf}{delete\PYZus{}outliers}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{p}{:} 
+         
+             \PY{n}{li} \PY{o}{=} \PY{p}{[}\PY{n}{i} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{df}\PY{o}{.}\PY{n}{columns} \PY{k}{if} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{target}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{not} \PY{o+ow}{in} \PY{n}{i}\PY{p}{]}
+         
+             \PY{k}{for} \PY{n}{feat} \PY{o+ow}{in} \PY{n}{li} \PY{p}{:} 
+                 \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{return\PYZus{}outliers}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{feat}\PY{p}{]}\PY{p}{,} \PY{n}{k}\PY{p}{)} \PY{o}{==} \PY{k+kc}{False}\PY{p}{]}
+         
+             \PY{k}{return} \PY{n}{df}
+         
+         \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+         
+         \PY{n}{df} \PY{o}{=} \PY{n}{delete\PYZus{}outliers}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}
+         \PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}16}]:}      last\_don  num\_don  first\_don  target
+         664         0       13         28       1
+         441         1       16         35       1
+         160         2       20         45       1
+         335         4        4          4       0
+         47          2        7         14       1
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{c+c1}{\PYZsh{} and finally to be as confortable as possible, regroup all these opps in one function}
+         
+         \PY{k}{def} \PY{n+nf}{first\PYZus{}tour}\PY{p}{(}\PY{n}{folder}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{data}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{file}\PY{o}{=}\PY{n}{TRAIN\PYZus{}FILE}\PY{p}{)} \PY{p}{:} 
+         
+             \PY{c+c1}{\PYZsh{} build data path}
+             \PY{n}{path} \PY{o}{=} \PY{n}{finding\PYZus{}master\PYZus{}path}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{data}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+             \PY{c+c1}{\PYZsh{} info(path)                            \PYZsh{} UNCOMMENT IF NEEDED}
+         
+             \PY{c+c1}{\PYZsh{} just show dataset list}
+             \PY{c+c1}{\PYZsh{} datasets = return\PYZus{}datasets(path)      \PYZsh{} UNCOMMENT IF NEEDED}
+             \PY{c+c1}{\PYZsh{} info(datasets)                        \PYZsh{} UNCOMMENT IF NEEDED}
+         
+             \PY{c+c1}{\PYZsh{} build our df}
+             \PY{n}{df} \PY{o}{=} \PY{n}{build\PYZus{}df}\PY{p}{(}\PY{n}{path}\PY{p}{,} \PY{n}{file}\PY{p}{)}
+         
+             \PY{c+c1}{\PYZsh{} print main info}
+             \PY{c+c1}{\PYZsh{} print\PYZus{}df(df)                          \PYZsh{} UNCOMMENT IF NEEDED}
+         
+             \PY{c+c1}{\PYZsh{} (overkilled) recast dataframe in a better dtype}
+             \PY{n}{df} \PY{o}{=} \PY{n}{re\PYZus{}dtype}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+         
+             \PY{c+c1}{\PYZsh{} graph features distr and correlation  \PYZsh{} UNCOMMENT IF NEEDED}
+             \PY{c+c1}{\PYZsh{} graph\PYZus{}each\PYZus{}feature(df)                  }
+             \PY{c+c1}{\PYZsh{} graph\PYZus{}corr\PYZus{}matrix(df)                 \PYZsh{} UNCOMMENT IF NEEDED}
+         
+             \PY{c+c1}{\PYZsh{} drop corr values}
+             \PY{n}{df} \PY{o}{=} \PY{n}{drop\PYZus{}corr\PYZus{}features}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+         
+             \PY{c+c1}{\PYZsh{} nas}
+             \PY{c+c1}{\PYZsh{} study\PYZus{}nas(df)                         \PYZsh{} UNCOMMENT IF NEEDED}
+         
+             \PY{c+c1}{\PYZsh{} for i in [1.5, 2, 2.5, 3] :           \PYZsh{} UNCOMMENT IF NEEDED}
+             \PY{c+c1}{\PYZsh{} study\PYZus{}outliers(df, i)                 \PYZsh{} UNCOMMENT IF NEEDED}
+         
+             \PY{c+c1}{\PYZsh{} df = delete\PYZus{}outliers(df, 3)            \PYZsh{} UNCOMMENT IF NEEDED}
+         
+             \PY{k}{return} \PY{n}{df}
+         
+         \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}}
+         
+         
+         \PY{n}{df} \PY{o}{=} \PY{n}{first\PYZus{}tour}\PY{p}{(}\PY{n}{folder}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/home/alex/Driven\PYZhy{}Data\PYZhy{}Blood\PYZhy{}Donations/data/}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{file}\PY{o}{=}\PY{n}{TRAIN\PYZus{}FILE}\PY{p}{)} 
+         \PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}17}]:}      last\_don  num\_don  first\_don  target
+         619         2       50         98       1
+         664         0       13         28       1
+         441         1       16         35       1
+         160         2       20         45       1
+         358         1       24         77       0
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{c+c1}{\PYZsh{} Conclusion}
+         
+         \PY{c+c1}{\PYZsh{} Through this first study, we can see several things. Our dataset is of very good quality, few outliers, }
+         \PY{c+c1}{\PYZsh{} no missing values, a number of features reduced and little corelation.}
+         
+         \PY{c+c1}{\PYZsh{} Its simplicity will be an obvious limit when it comes to making feature engineering, benchmarking }
+         \PY{c+c1}{\PYZsh{} models and looking for marginal improvements.}
+\end{Verbatim}
+
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
