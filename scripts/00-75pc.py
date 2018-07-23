@@ -2,24 +2,6 @@
 #-*- coding: utf8 -*-
 
 
-"""
-00-first-tour.py
-"""
-
-
-"""
-find here a first study of the dataset, in which we seek to understand and
-give meaning to the dataset.
-
-we are not trying to solve our problem but will focus on visualization,
-clenaning and feature engineering.
-
-at first we will just study the corelations, the links, the quality and the
-meaning of our dataset.
-
-external research and more general considerations may be included in this work
-
-"""
 
 
 # import
@@ -28,8 +10,16 @@ import os, sys, logging, random
 
 import pandas as pd
 import numpy as np
+
 from matplotlib import pyplot as plt
 import seaborn as sns
+
+# from sklearn.preprocessing import *
+from sklearn.model_selection import train_test_split
+from sklearn.dummy import DummyClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, log_loss
+from sklearn.model_selection import GridSearchCV
 
 
 # logging 
@@ -43,7 +33,6 @@ info = logging.info
 
 # %matplotlib
 # sns.set()
-
 
 # consts
 
@@ -225,16 +214,12 @@ def delete_outliers(df, k) :
 
     return df
 
-
-# def main() : 
-
-
 def first_tour(folder="data", file=TRAIN_FILE) : 
 
 
     # build data path
     path = finding_master_path(folder)
-	# info(path)							# UNCOMMENT IF NEEDED
+    info(path)
 
     # just show dataset list
     # datasets = return_datasets(path)      # UNCOMMENT IF NEEDED
@@ -268,3 +253,158 @@ def first_tour(folder="data", file=TRAIN_FILE) :
 
 
     return df
+
+
+
+
+def return_X_y(df) : 
+	""" """
+
+	X = df.drop("target", axis=1)
+	y = df.target
+
+	return X, y  
+
+
+def naive_model(df=None) : 
+	""" """
+	if not isinstance(df, pd.DataFrame): 
+		df = first_tour()
+
+	X,y = return_X_y(df)
+	t = split(X,y)
+
+	X_train, X_test, y_train, y_test = t 
+
+	freq = y_test.value_counts() / len(y_test)
+		
+	y_pred = np.random.binomial(1, freq[1], len(y_test))
+	y_pred = pd.Series(y_pred)
+
+	return accuracy_score(y_test, y_pred).round(3)
+
+
+def split(X,y) : 
+	""" """
+
+	func = train_test_split
+	tup = train_test_split(X, y)
+	
+	return tup
+
+
+def dummy_model(df=None) : 
+	""" """
+
+	if not isinstance(df, pd.DataFrame): 
+		df = first_tour()
+	
+	X,y = return_X_y(df)
+	t = split(X,y)
+
+
+	X_train, X_test, y_train, y_test = t 
+
+	model = DummyClassifier()
+	model.fit(X_train, y_train)
+	y_pred = model.predict(X_test)
+
+	return accuracy_score(y_test, y_pred).round(3)
+
+
+def basic_model(df=None) : 
+	""" """
+
+	if not isinstance(df, pd.DataFrame): 
+		df = first_tour()
+	
+	X,y = return_X_y(df)
+	t = split(X,y)
+
+
+	X_train, X_test, y_train, y_test = t 
+
+	model = LogisticRegression()
+	model.fit(X_train, y_train)
+	y_pred = model.predict(X_test)
+
+	return accuracy_score(y_test, y_pred).round(3)
+
+
+def model_accuracy_mean(model, nb=5, df=None) : 
+	""" """
+
+	scores = [model(df) for i in range(nb)]
+
+	info(type(scores))
+	info(type(range(nb)))
+
+	score = sum(scores)/len(scores)
+
+	return score.round(3)
+
+
+
+def grid_search_logistic_regression(df=None) : 
+	""" """
+
+
+	if not isinstance(df, pd.DataFrame): 
+		df = first_tour()
+	
+	X,y = return_X_y(df)
+	t = split(X,y)
+
+
+	params = {	"penalty" 	  : ["l1", "l2"], #   "solver"	  : [	"newton-cg", "lbfgs", "liblinear", "sag", "saga"],
+				"warm_start"  : [True, False], 
+				"tol"		  : np.logspace(-6, 2, 9),
+				"C" 		  : np.logspace(-4, 2, 7), 
+				"max_iter"	  : np.logspace(2, 5, 4) 	} # "multi_class" : ["ovr", "multinomial"]
+
+	model = LogisticRegression()
+	cv = 10
+	n_jobs=3
+	scoring = "accuracy"		# log_loss
+	grid = GridSearchCV(	estimator=model, 
+							param_grid=params, 	
+							cv =cv, 
+							n_jobs=n_jobs,
+							scoring=scoring )
+	
+	X_train, X_test, y_train, y_test = t 
+	grid.fit(X_train, y_train)
+
+	info(grid.best_estimator_)
+	info(grid.best_score_)
+	info(grid.best_params_)
+
+	y_pred = grid.predict(X_test)
+
+	return accuracy_score(y_test, y_pred).round(3)
+
+
+
+
+def main() : 
+
+	df = first_tour("data", TRAIN_FILE)
+
+	grid = grid_search_logistic_regression(df)
+
+
+	path = finding_master_path("data")
+	df = build_df(path, TEST_FILE)
+	df = drop_corr_features(df)
+
+	y = grid.predict(df)
+	y = pd.Series(y, name="Made Donation in March 2007", index = df.index, dtype=np.floap64)
+	
+	# path = finding_master_path("submissions")
+	# path += "submission0.csv"
+	# y.to_csv(	path, index=True, 
+	# 			header=True, index_label="")
+
+
+# if __name__ == '__main__':
+# 	main()
