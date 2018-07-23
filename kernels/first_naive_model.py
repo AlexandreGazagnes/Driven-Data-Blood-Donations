@@ -21,7 +21,6 @@ we will then implement a results manager that will be a dataframe
 """
 
 
-
 # import
 
 # from sklearn.preprocessing import *
@@ -36,7 +35,6 @@ from sklearn.metrics import accuracy_score, log_loss
 from first_tour import *
 
 
-
 # consts 
 
 # COLUMNS = ["naive", "dummy", "basic", "features eng."]
@@ -45,9 +43,7 @@ from first_tour import *
 
 # functions
 
-
 def return_X_y(df) : 
-    """ """
 
     X = df.drop("target", axis=1)
     y = df.target
@@ -55,8 +51,8 @@ def return_X_y(df) :
     return X, y  
 
 
-def naive_model(df=None) : 
-    """ """
+def naive_model(df=None) :
+
     if not isinstance(df, pd.DataFrame): 
         df = first_tour()
 
@@ -74,7 +70,6 @@ def naive_model(df=None) :
 
 
 def split(X,y) : 
-    """ """
 
     func = train_test_split
     tup = train_test_split(X, y)
@@ -83,14 +78,12 @@ def split(X,y) :
 
 
 def dummy_model(df=None) : 
-    """ """
 
     if not isinstance(df, pd.DataFrame): 
         df = first_tour()
     
     X,y = return_X_y(df)
     t = split(X,y)
-
 
     X_train, X_test, y_train, y_test = t 
 
@@ -102,14 +95,12 @@ def dummy_model(df=None) :
 
 
 def basic_model(df=None) : 
-    """ """
 
     if not isinstance(df, pd.DataFrame): 
         df = first_tour()
     
     X,y = return_X_y(df)
     t = split(X,y)
-
 
     X_train, X_test, y_train, y_test = t 
 
@@ -121,7 +112,6 @@ def basic_model(df=None) :
 
 
 def model_accuracy_mean(model, nb=5, df=None) : 
-    """ """
 
     scores = [model(df) for i in range(nb)]
 
@@ -142,7 +132,6 @@ MODELS = [naive_model, dummy_model, basic_model]
 def add_new_results(results=None, feat_com=None, n=5, 
                     models=MODELS, columns= COLUMNS, 
                     df=None) : 
-    """ """
     
     if not isinstance(results, pd.DataFrame) : 
         results = pd.DataFrame(columns=columns)
@@ -170,7 +159,6 @@ def first_approch_of_feat_eng(  drop_list,
                                 n=5, 
                                 models=MODELS, columns= COLUMNS, 
                                 df=None) : 
-    """ """
     
     if not isinstance(drop_list, list) : 
         raise TypeError
@@ -192,12 +180,10 @@ def first_approch_of_feat_eng(  drop_list,
                                     columns=columns, 
                                     df=df)
 
-
     return results
 
 
-def first_naive_model() : 
-    """ """ 
+def first_naive_model() :  
 
     results = pd.DataFrame(columns=COLUMNS)
     results = add_new_results(results, "without_any_feat_eng")

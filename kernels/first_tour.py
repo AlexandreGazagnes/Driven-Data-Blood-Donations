@@ -28,6 +28,7 @@ import os, sys, logging, random
 
 import pandas as pd
 import numpy as np
+
 from matplotlib import pyplot as plt
 import seaborn as sns
 
@@ -76,7 +77,6 @@ def finding_master_path(folder="data") :
     
 
 def return_datasets(path) : 
-    """ """
 
     li = [i for i in os.listdir(path) if ".csv" in i ]
     
@@ -84,19 +84,15 @@ def return_datasets(path) :
 
 
 def build_df(path, file) : 
-    """ """
-
 
     df          = pd.read_csv(path+file, index_col=0)
     df.columns  = pd.Index( ["last_don", "num_don","vol_don", "first_don", 
                             "target"], dtype="object")
 
-
     return df
 
 
 def print_df(df) : 
-    """ """
 
     print(df.ndim)
     print(df.shape)
@@ -108,9 +104,7 @@ def print_df(df) :
     print(df.tail(3))
 
 
-
 def re_dtype(df) : 
-
 
     # li = [np.uint8, np.uint16]
     # [print(i,  np.iinfo(i).min, np.iinfo(i).max) for i in li]
@@ -129,7 +123,6 @@ def re_dtype(df) :
 
 
 def graph_each_feature(df)  : 
-    """ """
 
     features = [i for i in df.columns if "target" not in i] 
 
@@ -156,7 +149,6 @@ def graph_each_feature(df)  :
 
 
 def graph_corr_matrix(df) : 
-    """ """
 
     corr_mat = df.corr()
     sns.heatmap(corr_mat, cmap="coolwarm", annot=True, fmt='.3g')
@@ -167,7 +159,6 @@ def graph_corr_matrix(df) :
 
 
 def drop_corr_features(df) : 
-    """ """
 
     df = df.drop("vol_don", axis=1)
 
@@ -175,16 +166,13 @@ def drop_corr_features(df) :
 
 
 def study_nas(df) : 
-    """ """
 
     print(df.isna().any())
     print(df.isna().any())
 
 
 def study_outliers(df, k=1.5) : 
-    """ """
 
-    
     fig, _axes = plt.subplots(1, 5, figsize=(13,13))
     axes = _axes.flatten()
 
@@ -204,7 +192,6 @@ def study_outliers(df, k=1.5) :
 
 
 def return_outliers(ser, k) : 
-    """ """
 
     desc = ser.describe()
     q1, q3, q2 = desc["25%"], desc["75%"], desc["50%"]
@@ -226,11 +213,7 @@ def delete_outliers(df, k) :
     return df
 
 
-# def main() : 
-
-
 def first_tour(folder="data", file=TRAIN_FILE) : 
-
 
     # build data path
     path = finding_master_path(folder)
@@ -259,12 +242,9 @@ def first_tour(folder="data", file=TRAIN_FILE) :
     # nas
     # study_nas(df)                         # UNCOMMENT IF NEEDED
 
-
     # for i in [1.5, 2, 2.5, 3] :           # UNCOMMENT IF NEEDED
     # study_outliers(df, i)                 # UNCOMMENT IF NEEDED
 
-
-    # df = delete_outliers(df, 3)            # UNCOMMENT IF NEEDED
-
+    # df = delete_outliers(df, 3)           # UNCOMMENT IF NEEDED
 
     return df
