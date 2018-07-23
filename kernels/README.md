@@ -1,10 +1,12 @@
 # Kernels
 
-Find here all preparatory work you can choose to use a ipython script (.py) or juyter notebook (.ipynb) file. 
+Find here all preparatory work regarding data cleaning, feature engineering, model selection...
+For each folder, you can choose to use a ipython script (.py), juyter notebook (.ipynb) or a markdown (.md) file.
 
-* 00 - first_tour.py
-* 01 - first_naives_model.py
-* 02 - improving_naives_model.py
-* 03 - feature_engineering.py
-* 04 - advanced_models.py
+* 00_ first_tour
+* 01_first_naive_models
+* 02_improving_naives_model
+* 03_feature_engineering
+* 04_advanced_models
 * 05 - ....
+* 99_final_model
