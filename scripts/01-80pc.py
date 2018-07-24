@@ -3,12 +3,560 @@
 
 
 """
+00-first-tour.py
+"""
+
+
+"""
+find here a first study of the dataset, in which we seek to understand and
+give meaning to the dataset.
+
+we are not trying to solve our problem but will focus on visualization,
+clenaning and feature engineering.
+
+at first we will just study the corelations, the links, the quality and the
+meaning of our dataset.
+
+external research and more general considerations may be included in this work
+
+"""
+
+
+# import
+
+import os, sys, logging, random, time
+
+import pandas as pd
+import numpy as np
+
+from matplotlib import pyplot as plt
+import seaborn as sns
+
+
+# logging 
+
+l = logging.INFO
+logging.basicConfig(level=l, format="%(levelname)s : %(message)s")
+info = logging.info
+
+
+# graph
+
+# %matplotlib
+# sns.set()
+
+
+# consts
+
+FOLDER      = "Driven-Data-Blood-Donations"
+TRAIN_FILE  = "training_data.csv"
+TEST_FILE   = "test_data.csv"
+
+
+# functions
+
+def caller(funct) : 
+
+    def wrapper(*args, **kwargs) : 
+
+        msg = funct.__name__ + " : called"
+        print(msg)
+        
+
+        res = funct(*args, **kwargs)
+
+        msg = funct.__name__ + " : ended"
+        print(msg)
+
+        return res
+
+    return wrapper
+
+
+def timer(funct) : 
+
+    def wrapper(*args, **kwargs) : 
+        
+        t = time.time()
+
+        res = funct(*args, **kwargs)
+
+        t = round(time.time() - t, 2)
+        msg = funct.__name__ + " : " + str(t) + " secs" 
+        print(msg)
+
+        return res
+
+    return wrapper
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def finding_master_path(folder="data") :
+    """just find our data folder in the repo structure from
+    anywhere"""
+
+    path = os.getcwd()
+    path = path.split("/")
+
+    idx  = path.index(FOLDER)
+    path = path[:idx+1]
+    folder = str(folder) + "/"
+    path.append(folder)
+    
+    path = "/".join(path)
+
+    # check if path is a valid path
+    if not os.path.isdir(path) : 
+        raise NotADirectoryError
+
+    return path
+    
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def return_datasets(path) : 
+
+    li = [i for i in os.listdir(path) if ".csv" in i ]
+    
+    return li 
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def build_df(path, file) : 
+
+    df          = pd.read_csv(path+file, index_col=0)
+
+    if len(df.columns) == 5 : 
+    	df.columns  = pd.Index( ["last_don", "num_don","vol_don", "first_don", 
+                            "target"], dtype="object")
+    elif len(df.columns) == 4 : 
+    	df.columns  = pd.Index( ["last_don", "num_don","vol_don", "first_don", 
+                            ], dtype="object")
+    else : 
+        raise ValueError("invalid number")
+
+    return df
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def print_df(df) : 
+
+    print(df.ndim)
+    print(df.shape)
+    print(df.dtypes)
+    print(df.index)
+    print(df.columns)
+    print(df.describe())
+    print(df.head(3))
+    print(df.tail(3))
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def re_dtype(df) : 
+
+    # li = [np.uint8, np.uint16]
+    # [print(i,  np.iinfo(i).min, np.iinfo(i).max) for i in li]
+
+    dtypes_dict = {     "last_don"  : np.uint8, 
+                        "num_don"   : np.uint8,
+                        "vol_don"   : np.uint16, 
+                        "first_don" : np.uint8, 
+                        "target"    : np.uint8       }
+
+
+    df = df.astype(dtypes_dict)
+
+    return df 
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def graph_each_feature(df)  : 
+
+    features = [i for i in df.columns if "target" not in i] 
+
+    fig, _axes = plt.subplots(2, 2, figsize=(13,13))
+    axes = _axes.flatten()
+
+    info(fig)
+    info(axes)
+    info(len(axes))
+
+    for i, feat in enumerate(features) :
+        info(i, feat)
+
+        # -----------------------------------------
+        # sns.distplot --> (kde=True ) ???
+        # -----------------------------------------
+
+        axes[i].hist(df[feat], bins=30)
+        axes[i].set_title(feat)
+
+    plt.suptitle("features distribution")
+    
+    plt.show()
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def graph_corr_matrix(df) : 
+
+    corr_mat = df.corr()
+    sns.heatmap(corr_mat, cmap="coolwarm", annot=True, fmt='.3g')
+
+    plt.title("correlation matrix")
+    
+    plt.show()
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def drop_corr_features(df) : 
+
+    df = df.drop("vol_don", axis=1)
+
+    return df 
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def study_nas(df) : 
+
+    print(df.isna().any())
+    print(df.isna().any())
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def study_outliers(df, k=1.5) : 
+
+    fig, _axes = plt.subplots(1, 5, figsize=(13,13))
+    axes = _axes.flatten()
+
+    info(fig)
+    info(axes)
+    info(len(axes))
+
+    for i, feat in enumerate(df.columns) :
+        info(i, feat)
+
+        axes[i].boxplot(df[feat], whis=k)
+        axes[i].set_title(feat)
+
+    plt.suptitle("features outliers, k of {}".format(whis))
+    
+    plt.show()
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def return_outliers(ser, k) : 
+
+    desc = ser.describe()
+    q1, q3, q2 = desc["25%"], desc["75%"], desc["50%"]
+    IQ = q3-q1
+    range_min, range_max = q1 - k * IQ, q3 + k*IQ
+
+    # outliers = ser[(ser > range_max) or (ser < range_min)]
+    
+    return ser >= range_max
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
+def delete_outliers(df, k) : 
+
+    li = [i for i in df.columns if "target" not in i]
+
+    for feat in li : 
+        df = df[return_outliers(df[feat], k) == False]
+
+    return df
+
+@caller
+@timer
+def first_tour(folder="data", file=TRAIN_FILE) : 
+
+    # build data path
+    path = finding_master_path(folder)
+    # info(path)                            # UNCOMMENT IF NEEDED
+
+    # just show dataset list
+    # datasets = return_datasets(path)      # UNCOMMENT IF NEEDED
+    # info(datasets)                        # UNCOMMENT IF NEEDED
+
+    # build our df
+    df = build_df(path, file)
+
+    # print main info
+    # print_df(df)                          # UNCOMMENT IF NEEDED
+
+    # (overkilled) recast dataframe in a better dtype
+    df = re_dtype(df)
+
+    # graph features distr and correlation  # UNCOMMENT IF NEEDED
+    # graph_each_feature(df)                  
+    # graph_corr_matrix(df)                 # UNCOMMENT IF NEEDED
+
+    # drop corr values
+    df = drop_corr_features(df)
+
+    # nas
+    # study_nas(df)                         # UNCOMMENT IF NEEDED
+
+    # for i in [1.5, 2, 2.5, 3] :           # UNCOMMENT IF NEEDED
+    # study_outliers(df, i)                 # UNCOMMENT IF NEEDED
+
+    # df = delete_outliers(df, 3)           # UNCOMMENT IF NEEDED
+
+    return df
+
+
+
+
+
+############################################################################################
+############################################################################################
+############################################################################################
+############################################################################################
+############################################################################################
+
+
+
+
+
+"""
+01-first-naive-model.py
+"""
+
+
+"""
+in this second part, we will implement our first logistic regression model.
+
+We will first implement by hand a naive classifier, then a dummy classifier 
+(who does the same job), and finally a basic logistic regression model.
+
+rather than looking at the results of a regression we will implement a 
+function that will test the model x times and that will average the results
+ obtained
+
+we will then implement a results manager that will be a dataframe
+"""
+
+
+# import
+
+# from sklearn.preprocessing import *
+from sklearn.model_selection import train_test_split
+# from sklearn.grid_search import *
+
+from sklearn.dummy import DummyClassifier
+from sklearn.linear_model import LogisticRegression
+
+from sklearn.metrics import accuracy_score, log_loss
+
+
+
+# consts 
+
+# COLUMNS = ["naive", "dummy", "basic", "features eng."]
+# MODELS = [naive_model, dummy_model, basic_model]
+
+
+# functions
+
+# @timer
+def return_X_y(df) : 
+
+    X = df.drop("target", axis=1)
+    y = df.target
+
+    return X, y  
+
+
+# @timer
+def split(X,y) : 
+
+    func = train_test_split
+    tup = train_test_split(X, y)
+    
+    return tup
+
+
+# @timer
+def naive_model(df=None) :
+
+    if not isinstance(df, pd.DataFrame): 
+        df = first_tour()
+
+    X,y = return_X_y(df)
+    t = split(X,y)
+
+    X_train, X_test, y_train, y_test = t 
+
+    freq = y_test.value_counts() / len(y_test)
+        
+    y_pred = np.random.binomial(1, freq[1], len(y_test))
+    y_pred = pd.Series(y_pred)
+
+    acc = accuracy_score(y_test, y_pred).round(3)
+
+    return acc, None 
+
+
+# @timer
+def dummy_model(df=None) : 
+
+    if not isinstance(df, pd.DataFrame): 
+        df = first_tour()
+    
+    X,y = return_X_y(df)
+    t = split(X,y)
+
+    X_train, X_test, y_train, y_test = t 
+
+    model = DummyClassifier()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred).round(3)
+
+    return acc, model
+
+
+# @timer
+def basic_model(df=None) : 
+
+    if not isinstance(df, pd.DataFrame): 
+        df = first_tour()
+    
+    X,y = return_X_y(df)
+    t = split(X,y)
+
+    X_train, X_test, y_train, y_test = t 
+
+    model = LogisticRegression()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred).round(3)
+    
+    return acc, model
+
+
+@timer
+def model_accuracy_mean(model, nb=5, df=None) : 
+
+    scores = pd.Series([model(df)[0] for i in range(nb)])
+
+    info(type(scores))
+    info(type(range(nb)))
+
+    score = scores.mean().round(3)
+
+    return score
+
+
+##############################################################
+##############################################################
+
+
+COLUMNS = ["naive", "dummy", "basic", "features eng."]
+MODELS = [naive_model, dummy_model, basic_model]
+
+
+##############################################################
+##############################################################
+
+
+# @timer
+def add_new_results(results=None, feat_com=None, n=5, 
+                    models=MODELS, columns= COLUMNS, 
+                    df=None) : 
+    
+    if not isinstance(results, pd.DataFrame) : 
+        results = pd.DataFrame(columns=columns)
+
+    new = [model_accuracy_mean(i, n, df) for i in models]
+    info(new)
+
+    if not feat_com : 
+        feat_com = "No comment"
+
+    new.append(feat_com)
+    info(new)
+    
+    new = pd.Series(new, index=columns)
+    info(new)
+    
+    results = results.append(new, ignore_index=True)
+    info(results)
+
+    return results
+
+
+@timer
+def first_approch_of_feat_eng(  drop_list,
+                                results=None,
+                                n=5, 
+                                models=MODELS, columns= COLUMNS, 
+                                df=None) : 
+    
+    if not isinstance(drop_list, list) : 
+        raise TypeError
+
+    if not isinstance(results, pd.DataFrame) : 
+        results = pd.DataFrame(columns=columns)
+
+    for i in drop_list : 
+
+        df = first_tour()
+        df = delete_outliers(df, i) 
+
+        feat_com = "drop outliers > " + str(i)
+
+        results = add_new_results(  results=results,
+                                    feat_com=feat_com,
+                                    n=n, 
+                                    models=models, 
+                                    columns=columns, 
+                                    df=df)
+
+    return results
+
+
+@timer
+def first_naive_model() :  
+
+    results = pd.DataFrame(columns=COLUMNS)
+    results = add_new_results(results, "without_any_feat_eng")
+
+    results = first_approch_of_feat_eng([1.5, 2.0, 2.5, 3.0, 3.5])
+    
+    return results
+
+
+
+
+
+
+
+
+
+############################################################################################
+############################################################################################
+############################################################################################
+############################################################################################
+############################################################################################
+
+
+
+#!/usr/bin/env python3
+#-*- coding: utf8 -*-
+
+
+"""
 02-improving-naive-model.py
 """
 
 
 """
-
+blablabla
+blablabla
+blablabla
+blablabla
 """
 
 
@@ -27,7 +575,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import LinearSVC, NuSVC
 
-# from first_naive_model import *
 
 # consts 
 
@@ -70,24 +617,24 @@ def run_GSCV(   model, params,
     if not isinstance(df, pd.DataFrame): 
         df = first_tour()
 
-    if outliers : 
-        try : 
-            outliers = float(outliers)
-        except :
-            raise ValueError("outliers params must be a float")
+    # if outliers : 
+    #     try : 
+    #         outliers = float(outliers)
+    #     except :
+    #         raise ValueError("outliers params must be a float")
 
-        if not (1.4<= outliers <= 3.5)  :
-            raise ValueError("outliers must be 1.4<= outliers <= 3.5")
+    #     if not (1.4<= outliers <= 3.5)  :
+    #         raise ValueError("outliers must be 1.4<= outliers <= 3.5")
 
-    if outliers : 
-        comment+="outliers k= "+ str(outliers)
-        df = delete_outliers(df, outliers)
+    # if outliers : 
+    #     comment+="outliers k= "+ str(outliers)
+    #     df = delete_outliers(df, outliers)
      
     X,y = return_X_y(df)
 
-    if regularize : 
-        raise ValueError("regularize funct not implemented yet")
-        X = regularize(X)
+    # if regularize : 
+    #     raise ValueError("regularize funct not implemented yet")
+    #     X = regularize(X)
 
     t = split(X,y)
 
@@ -566,68 +1113,57 @@ def graph_benchmark_various_params_once(model, params, n_list=[1, 3, 5,]) : # 10
     return meta_results
 
 
-# def decor_run_GSCV(funct, *args, **kwargs) : 
-
-#     def wrapper(funct)
-
-#         return funct 
-
-#     return wrapper
 
 
-# def decor_grid(funct, *args, **kwargs) : 
+def main() : 
 
-#     def wrapper(funct)
-
-#         return funct 
-
-#     return wrapper
+    df = first_tour("data", TRAIN_FILE)
+    df = delete_outliers(df, 3.2)
 
 
-# def decor_run_GSCV_constructor() : 
-
-#     #####
-
-#     return decor_run_GSCV 
 
 
-# def decor_grid_constructor() : 
-
-#     #####
-
-#     return decor_grid 
 
 
-"""
-In [1]:  pd.DataFrame([pd.Series([model_accuracy_mean(i, 50, None) for i in MODELS], index=COLUMNS[:-1]) for i in
-        ...:  range(20)], columns= COLUMNS[:-1])
+    best_params_1   = { "C" :[1],
+                        "class_weight" :[None], 
+                        "dual":[False],
+                        "fit_intercept" :[True],
+                        "intercept_scaling" :[1],
+                        "max_iter" :[100],
+                        "multi_class" :["ovr"],
+                        "penalty" :["l1"],
+                        "solver" :["saga"],
+                        "tol":[0.0001],
+                        "warm_start" :[True]     }
 
-Out[1]:
+    model = LogisticRegression
+    param = best_params_1
 
-           naive      dummy      basic    gridLR     gridRC    gridSVC  \
-count  20.000000  20.000000  20.000000  20.00000  20.000000  20.000000   
-mean    0.636150   0.635250   0.764450   0.76280   0.768500   0.716650   
-std     0.005264   0.005684   0.004893   0.00425   0.003052   0.012584   
-min     0.628000   0.622000   0.757000   0.75600   0.762000   0.689000   
-25%     0.632750   0.632750   0.761500   0.75950   0.767000   0.711250   
-50%     0.634500   0.636000   0.765000   0.76300   0.768000   0.715500   
-75%     0.639000   0.638250   0.767250   0.76625   0.769250   0.723000   
-max     0.647000   0.648000   0.775000   0.76900   0.775000   0.743000   
-
-       gridNu    gridKNN     gridRF    gridAda    gridPer   gridMLP  
-count    20.0  20.000000  20.000000  20.000000  20.000000  20.00000  
-mean     -1.0   0.762700   0.752450   0.772600   0.701350   0.76740  
-std       0.0   0.004041   0.004383   0.003575   0.016174   0.00426  
-min      -1.0   0.756000   0.745000   0.763000   0.655000   0.76000  
-25%      -1.0   0.761000   0.749500   0.771000   0.695500   0.76375  
-50%      -1.0   0.762000   0.753500   0.772000   0.700500   0.76800  
-75%      -1.0   0.764250   0.756250   0.773500   0.711500   0.77025  
-max      -1.0   0.773000   0.758000   0.780000   0.726000   0.77400  
-
-"""
+    acc, grid = run_GSCV(model, param, df)
 
 
-# first Adaboost 
-# second gridLr et gridRC
+    path = finding_master_path("data")
+    df = build_df(path, TEST_FILE)
+    df = drop_corr_features(df)
 
-# results = first_approch_of_feat_eng(results, [1.5, 2.0, 2.5, 3.0, 3.5])
+    y = grid.predict(df)
+    y = pd.Series(y, name="Made Donation in March 2007", index = df.index, dtype=np.float64)
+    
+    path = finding_master_path("submissions")
+    path += "submission1.csv"
+    y.to_csv(   path, index=True, 
+                header=True, index_label="")
+
+
+
+# if __name__ == '__main__':
+#   main()
+
+
+
+
+
+
+
+

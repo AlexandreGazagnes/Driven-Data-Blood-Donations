@@ -43,6 +43,7 @@ from first_tour import *
 
 # functions
 
+# @timer
 def return_X_y(df) : 
 
     X = df.drop("target", axis=1)
@@ -51,6 +52,16 @@ def return_X_y(df) :
     return X, y  
 
 
+# @timer
+def split(X,y) : 
+
+    func = train_test_split
+    tup = train_test_split(X, y)
+    
+    return tup
+
+
+# @timer
 def naive_model(df=None) :
 
     if not isinstance(df, pd.DataFrame): 
@@ -66,17 +77,12 @@ def naive_model(df=None) :
     y_pred = np.random.binomial(1, freq[1], len(y_test))
     y_pred = pd.Series(y_pred)
 
-    return accuracy_score(y_test, y_pred).round(3)
+    acc = accuracy_score(y_test, y_pred).round(3)
+
+    return acc, None 
 
 
-def split(X,y) : 
-
-    func = train_test_split
-    tup = train_test_split(X, y)
-    
-    return tup
-
-
+# @timer
 def dummy_model(df=None) : 
 
     if not isinstance(df, pd.DataFrame): 
@@ -91,9 +97,12 @@ def dummy_model(df=None) :
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
-    return accuracy_score(y_test, y_pred).round(3)
+    acc = accuracy_score(y_test, y_pred).round(3)
+
+    return acc, model
 
 
+# @timer
 def basic_model(df=None) : 
 
     if not isinstance(df, pd.DataFrame): 
@@ -108,27 +117,37 @@ def basic_model(df=None) :
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
-    return accuracy_score(y_test, y_pred).round(3)
+    acc = accuracy_score(y_test, y_pred).round(3)
+    
+    return acc, model
 
 
+@timer
 def model_accuracy_mean(model, nb=5, df=None) : 
 
-    scores = [model(df) for i in range(nb)]
+    scores = pd.Series([model(df)[0] for i in range(nb)])
 
     info(type(scores))
     info(type(range(nb)))
 
-    score = sum(scores)/len(scores)
+    score = scores.mean().round(3)
 
-    return score.round(3)
+    return score
 
+
+##############################################################
+##############################################################
 
 
 COLUMNS = ["naive", "dummy", "basic", "features eng."]
 MODELS = [naive_model, dummy_model, basic_model]
 
 
+##############################################################
+##############################################################
 
+
+# @timer
 def add_new_results(results=None, feat_com=None, n=5, 
                     models=MODELS, columns= COLUMNS, 
                     df=None) : 
@@ -154,6 +173,7 @@ def add_new_results(results=None, feat_com=None, n=5,
     return results
 
 
+@timer
 def first_approch_of_feat_eng(  drop_list,
                                 results=None,
                                 n=5, 
@@ -183,6 +203,7 @@ def first_approch_of_feat_eng(  drop_list,
     return results
 
 
+@timer
 def first_naive_model() :  
 
     results = pd.DataFrame(columns=COLUMNS)

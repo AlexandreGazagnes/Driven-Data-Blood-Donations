@@ -124,8 +124,15 @@ def return_datasets(path) :
 def build_df(path, file) : 
 
     df          = pd.read_csv(path+file, index_col=0)
-    df.columns  = pd.Index( ["last_don", "num_don","vol_don", "first_don", 
+
+    if len(df.columns)  == 5 : 
+    	df.columns  = pd.Index( ["last_don", "num_don","vol_don", "first_don", 
                             "target"], dtype="object")
+    elif len(df.columns )  == 4 : 
+    	df.columns  = pd.Index( ["last_don", "num_don","vol_don", "first_don", 
+                            ], dtype="object")
+    else : 
+        raise ValueError("invalid numb of columns")
 
     return df
 
