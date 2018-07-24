@@ -67,8 +67,8 @@ def naive_model(df=None) :
     if not isinstance(df, pd.DataFrame): 
         df = first_tour()
 
-    X,y = return_X_y(df)
-    t = split(X,y)
+    X,y 	= return_X_y(df)
+    t 		= split(X,y)
 
     X_train, X_test, y_train, y_test = t 
 
@@ -77,9 +77,9 @@ def naive_model(df=None) :
     y_pred = np.random.binomial(1, freq[1], len(y_test))
     y_pred = pd.Series(y_pred)
 
-    acc = accuracy_score(y_test, y_pred).round(3)
+    lolo = log_loss(y_test, y_pred).round(3)
 
-    return acc, None 
+    return lolo, None 
 
 
 # @timer
@@ -88,8 +88,8 @@ def dummy_model(df=None) :
     if not isinstance(df, pd.DataFrame): 
         df = first_tour()
     
-    X,y = return_X_y(df)
-    t = split(X,y)
+    X,y 	= return_X_y(df)
+    t 		= split(X,y)
 
     X_train, X_test, y_train, y_test = t 
 
@@ -97,9 +97,9 @@ def dummy_model(df=None) :
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
-    acc = accuracy_score(y_test, y_pred).round(3)
+    lolo = log_loss(y_test, y_pred).round(3)
 
-    return acc, model
+    return lolo, model
 
 
 # @timer
@@ -108,8 +108,8 @@ def basic_model(df=None) :
     if not isinstance(df, pd.DataFrame): 
         df = first_tour()
     
-    X,y = return_X_y(df)
-    t = split(X,y)
+    X,y 	= return_X_y(df)
+    t 		= split(X,y)
 
     X_train, X_test, y_train, y_test = t 
 
@@ -117,9 +117,9 @@ def basic_model(df=None) :
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
-    acc = accuracy_score(y_test, y_pred).round(3)
+    lolo = log_loss(y_test, y_pred).round(3)
     
-    return acc, model
+    return lolo, model
 
 
 @timer

@@ -20,15 +20,8 @@ blablabla
 
 from improving_naive_models import * 
 
-# consts 
 
-# COLUMNS   = ["naive", "dummy", "basic", "features eng."]
-# MODELS    = [naive_model, dummy_model, basic_model]
-
-
-
-
-
+# functions
 
 def outliers_impact_once(graph=False) : 
 
@@ -56,9 +49,9 @@ def outliers_impact_once(graph=False) :
         df = first_tour()
         df = delete_outliers(df, i)
 
-        acc = run_GSCV(model, param, df)[0]
+        lolo = run_GSCV(model, param, df)[0]
 
-        results.append([round(i, 2), acc])
+        results.append([round(i, 2), lolo])
 
     if graph : 
         x, y = zip(*results)

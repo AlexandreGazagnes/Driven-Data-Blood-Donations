@@ -124,8 +124,15 @@ def return_datasets(path) :
 def build_df(path, file) : 
 
     df          = pd.read_csv(path+file, index_col=0)
-    df.columns  = pd.Index( ["last_don", "num_don","vol_don", "first_don", 
+
+    if len(df.columns)  == 5 : 
+        df.columns  = pd.Index( ["last_don", "num_don","vol_don", "first_don", 
                             "target"], dtype="object")
+    elif len(df.columns )  == 4 : 
+        df.columns  = pd.Index( ["last_don", "num_don","vol_don", "first_don", 
+                            ], dtype="object")
+    else : 
+        raise ValueError("invalid numb of columns")
 
     return df
 
@@ -133,14 +140,29 @@ def build_df(path, file) :
 # @timer                                    # UNCOMMENT IF NEEDED
 def print_df(df) : 
 
+    print("data frame dimension :       \n")
     print(df.ndim)
+
+    print("\n\ndata frame shape :       \n")
     print(df.shape)
+
+    print("\n\ndata frame types :       \n")
     print(df.dtypes)
+
+    print("\n\ndata frame index :       \n") 
     print(df.index)
+
+    print("\n\ndata frame columns :     \n")
     print(df.columns)
-    print(df.describe())
+
+    print("\n\ndata frame head :        \n")
     print(df.head(3))
+
+    print("\n\ndata frame tail :        \n")
     print(df.tail(3))
+
+    print("\n\ndata frame resume :      \n")
+    print(df.describe())
 
 
 # @timer                                    # UNCOMMENT IF NEEDED
@@ -295,4 +317,5 @@ def first_tour(folder="data", file=TRAIN_FILE) :
     # df = delete_outliers(df, 3)           # UNCOMMENT IF NEEDED
 
     return df
+
 

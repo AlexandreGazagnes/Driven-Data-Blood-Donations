@@ -24,6 +24,7 @@ from collections import OrderedDict
 from sklearn.model_selection import GridSearchCV
 
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import Perceptron, RidgeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -63,7 +64,7 @@ def beeper(funct) :
 def run_GSCV(   model, params, 
                 df=None, 
                 outliers=None, regularize=None,
-                cv=10, n_jobs=6, scoring="accuracy",
+                cv=10, n_jobs=6, scoring="neg_log_loss",
                 verbose=0) : 
 
     model = model()
@@ -86,13 +87,13 @@ def run_GSCV(   model, params,
     #     comment+="outliers k= "+ str(outliers)
     #     df = delete_outliers(df, outliers)
      
-    X,y = return_X_y(df)
+    X,y         = return_X_y(df)
 
     # if regularize : 
     #     raise ValueError("regularize funct not implemented yet")
     #     X = regularize(X)
 
-    t = split(X,y)
+    t           = split(X,y)
 
     grid        = GridSearchCV( estimator=model, 
                                 param_grid=params,  
@@ -109,10 +110,10 @@ def run_GSCV(   model, params,
     info(grid.best_params_)
 
     y_pred = grid.predict(X_test)
-    acc = accuracy_score(y_test, y_pred).round(3)
-    info(acc)
+    lolo = log_loss(y_test, y_pred).round(3)
+    info(lolo)
 
-    return acc, grid
+    return lolo, grid
 
 
 # @decor_grid
@@ -131,34 +132,20 @@ def grid_LogisticRegression(df=None, param=None,
                         "max_iter":[100],
                         "multi_class":["ovr"],
                         "warm_start":[False],   }
-    """
+
     all_params      = { "penalty":["l1", "l2"],
                         "dual":[True, False],
-                        "tol":[0.0001],
-                        "C":[1.0],
+                        "tol":[0.0001],  # consider also np.logspace(-6, 2, 9)
+                        "C":[1.0],      # consider also np.logspace(-4, 2, 7)
                         "fit_intercept":[True],
                         "intercept_scaling":[1],
                         "class_weight":[None],
                         "solver":["newton-cg", "lbfgs", "liblinear", "sag", "saga"],
-                        "max_iter":[100],
+                        "max_iter":[100],   # consider also np.logspace(3, 5, 3)
                         "multi_class":["ovr", "multinomial"],
                         "warm_start":[False, True],   }
-    """
 
     none_params     = {}
-
-    test_params     = { "penalty":["l2"],
-                        "dual":[True],
-                        "tol":np.logspace(-6, 2, 9),
-                        "C":np.logspace(-4, 2, 7),
-                        "fit_intercept":[True],
-                        "intercept_scaling":[1],
-                        "class_weight":[None],
-                        "loss":["hinge","squared_hinge"],
-                        "solver":["liblinear"],
-                        "max_iter":np.logspace(3, 5, 3),
-                        "multi_class":["ovr","crammer_singer" ],
-                        "warm_start":[False, True],   }
 
     best_params_1   = { "C" :[1],
                         "class_weight" :[None], 
@@ -188,9 +175,9 @@ def grid_LogisticRegression(df=None, param=None,
     if not param :  param = none_params
     else  :         param = best_params_2
 
-    acc, grid       = run_GSCV(model, param, None)
+    lolo, grid       = run_GSCV(model, param, None)
 
-    return acc, grid
+    return lolo, grid
 
 
 # @decor_grid
@@ -198,7 +185,29 @@ def grid_LogisticRegression(df=None, param=None,
 def grid_RidgeClassifier(   df=None, param=None,
                             model=RidgeClassifier):
 
-    default_params  = {}
+    default_params  = { "alpha":[1.0],
+                        "fit_intercept":[True],
+                        "normalize":[False],
+                        "copy_X":[True],
+                        "max_iter":[None],
+                        "tol":[0.001],
+                        "class_weight":[None],
+                        "solver":["auto"],
+                        "random_state":[None]       }
+
+    all_params       = { "alpha":[1.0], # consider np.logspace(-6,2, 9)
+                        "fit_intercept":[True],
+                        "normalize":[False, True],
+                        "copy_X":[True],
+                        "max_iter":[None], # consider also np.logspace(3, 5, 3)
+                        "tol":[0.001],   # consider also np.logspace(-6, 2, 9)
+                        "class_weight":[None],
+                        "solver":["auto", "svd", "cholesky", "lsqr", "sparse_cg", "sag", "saga"],
+                        "random_state":[None]       }
+
+
+
+
 
     none_params     = {}
 
@@ -208,9 +217,9 @@ def grid_RidgeClassifier(   df=None, param=None,
     else  :         param = params
 
 
-    acc, grid       = run_GSCV(model, param, None)
+    lolo, grid       = run_GSCV(model, param, None)
 
-    return acc, grid
+    return lolo, grid
 
 
 # @decor_grid
@@ -227,9 +236,9 @@ def grid_LinearSVC(     df=None, param=None,
     if not param :  param = none_params
     else  :         param = params
 
-    acc, grid       = run_GSCV(model, param, None)
+    lolo, grid       = run_GSCV(model, param, None)
 
-    return acc, grid
+    return lolo, grid
 
 
 # @decor_grid
@@ -257,9 +266,9 @@ def grid_NuSVC(         df=None,  param=None,
     # if not param :    param = none_params
     # else  :       param = params
 
-    # acc, grid    = run_GSCV(model, param, None)
+    # lolo, grid    = run_GSCV(model, param, None)
 
-    # return acc, grid
+    # return lolo, grid
     return -1.0, None
 
 
@@ -277,9 +286,9 @@ def grid_KNeighborsClassifier(  df=None, param=None,
     if not param :  param = none_params
     else  :         param = params
 
-    acc, grid       = run_GSCV(model, param, None)
+    lolo, grid       = run_GSCV(model, param, None)
 
-    return acc, grid
+    return lolo, grid
 
 
 # @decor_grid
@@ -324,9 +333,9 @@ def grid_RandomForestClassifier(df=None, param=None,
     if not param :  param = none_params
     else  :         param = params
 
-    acc, grid       = run_GSCV(model, param, None)
+    lolo, grid       = run_GSCV(model, param, None)
     
-    return acc, grid
+    return lolo, grid
 
 
 # @decor_grid
@@ -334,16 +343,40 @@ def grid_RandomForestClassifier(df=None, param=None,
 def grid_AdaBoostClassifier(df=None, param=None,
                             model=AdaBoostClassifier):
 
-    default_params  = {}
+    default_params  = { "base_estimator" : [None],
+                        "n_estimators" : [50],
+                        "learning_rate" : [1.0],
+                        "algorithm" : ["SAMME.R"],
+                        "random_state" : [None] }
+
+
+    # m1 = DecisionTreeClassifier()
+    # m2 = LogisticRegression()
+    # m3 = RandomForestClassifier()
+
+    all_params      =  { "base_estimator" : [DecisionTreeClassifier(), LogisticRegression(),RandomForestClassifier() ],
+                        "n_estimators" : [50],  # consider np.arange(0.099, 201, 23)
+                        "learning_rate" : [1.0],  # np.logspace(-3, 2, 6)
+                        "algorithm" : ["SAMME", "SAMME.R"],
+                        "random_state" : [None] }
+
+
+    best_params      =  { "base_estimator" : [DecisionTreeClassifier(), LogisticRegression(), RidgeClassifier(), RandomForestClassifier() ],
+                        "n_estimators" : [int(i) for i in np.arange(1, 201, 23)],
+                        "learning_rate" : np.logspace(-3, 2, 6),
+                        "algorithm" : ["SAMME", "SAMME.R"],
+                        "random_state" : [None] }
+
+
 
     none_params     = {}
 
     if not param :  param = none_params
     else  :         param = params
 
-    acc, grid       = run_GSCV(model, param, None)
+    lolo, grid       = run_GSCV(model, param, None)
     
-    return acc, grid
+    return lolo, grid
 
 
 # @decor_grid
@@ -360,9 +393,9 @@ def grid_Perceptron(    df= None, param=None,
     if not param :  param = none_params
     else  :         param = params
 
-    acc, grid       = run_GSCV(model, param, None)
+    lolo, grid       = run_GSCV(model, param, None)
     
-    return acc, grid
+    return lolo, grid
 
 
 # @decor_grid
@@ -409,9 +442,9 @@ def grid_MLPClassifier( df=None, param=None,
     if not param :  param = none_params
     else  :         param = params
 
-    acc, grid       = run_GSCV(model, param, None)
+    lolo, grid       = run_GSCV(model, param, None)
 
-    return acc, grid
+    return lolo, grid
 
 
 #############################################################
@@ -506,39 +539,39 @@ def benchmark_various_params_once(model, params, n) :
     results = list()
 
     columns = list(params.keys())
-    columns.append("acc")
+    columns.append("lolo")
 
     for param in param_dict : 
 
         info("testing param : " + str(param))
 
         try : 
-            accs = [run_GSCV(model, param)[0] for i in range(n)]
-            accs = np.array(accs)
-            acc = accs.mean().round(3)
+            lolos = [run_GSCV(model, param)[0] for i in range(n)]
+            lolos = np.array(lolos)
+            lolo = lolos.mean().round(3)
             # grid_param = grid.get_params()
 
             info("done")
 
         except Exception as e : 
 
-            acc, grid_param = -100.0, "invalid dict of args"
+            lolo, grid_param = -100.0, "invalid dict of args"
             info("invalid params")
             info(str(param))
             info(e)
 
         serie = {i: j[0] for i,j in param.items()}
-        serie["acc"] = acc
+        serie["lolo"] = lolo
 
         results.append(pd.Series(serie))
 
-    results = pd.DataFrame(results, columns =columns.append("acc") )
+    results = pd.DataFrame(results, columns =columns.append("lolo") )
 
-    # clean nas in acc
-    mask = results.acc != -100.0
+    # clean nas in lolo
+    mask = results.lolo != -100.0
     results = results[mask]
 
-    results.sort_values(by="acc", ascending=False, inplace=True)
+    results.sort_values(by="lolo", ascending=False, inplace=True)
 
     return results
 
@@ -552,9 +585,9 @@ def graph_benchmark_various_params_once(model, params, n_list=[1, 3, 5,]) : # 10
     for n, c in zip(n_list, color_list) : 
         results = benchmark_various_params_once(model, params, n)
 
-        m, s = results.acc.mean(), results.acc.std()
+        m, s = results.lolo.mean(), results.lolo.std()
 
-        plt.scatter(results.index, results.acc, c=c, marker=".")
+        plt.scatter(results.index, results.lolo, c=c, marker=".")
         plt.plot(results.index, [m for i in results.index ], c=c)
         plt.plot(results.index, [m+s for i in results.index ], c=c,linestyle="dashed")
         plt.plot(results.index, [m-s for i in results.index ], c=c, linestyle="dashed")
@@ -601,36 +634,16 @@ def graph_benchmark_various_params_once(model, params, n_list=[1, 3, 5,]) : # 10
 #     return decor_grid 
 
 
-"""
-In [1]:  pd.DataFrame([pd.Series([model_accuracy_mean(i, 50, None) for i in MODELS], index=COLUMNS[:-1]) for i in
-        ...:  range(20)], columns= COLUMNS[:-1])
+###########################################################
+###########################################################
 
-Out[1]:
-
-           naive      dummy      basic    gridLR     gridRC    gridSVC  \
-count  20.000000  20.000000  20.000000  20.00000  20.000000  20.000000   
-mean    0.636150   0.635250   0.764450   0.76280   0.768500   0.716650   
-std     0.005264   0.005684   0.004893   0.00425   0.003052   0.012584   
-min     0.628000   0.622000   0.757000   0.75600   0.762000   0.689000   
-25%     0.632750   0.632750   0.761500   0.75950   0.767000   0.711250   
-50%     0.634500   0.636000   0.765000   0.76300   0.768000   0.715500   
-75%     0.639000   0.638250   0.767250   0.76625   0.769250   0.723000   
-max     0.647000   0.648000   0.775000   0.76900   0.775000   0.743000   
-
-       gridNu    gridKNN     gridRF    gridAda    gridPer   gridMLP  
-count    20.0  20.000000  20.000000  20.000000  20.000000  20.00000  
-mean     -1.0   0.762700   0.752450   0.772600   0.701350   0.76740  
-std       0.0   0.004041   0.004383   0.003575   0.016174   0.00426  
-min      -1.0   0.756000   0.745000   0.763000   0.655000   0.76000  
-25%      -1.0   0.761000   0.749500   0.771000   0.695500   0.76375  
-50%      -1.0   0.762000   0.753500   0.772000   0.700500   0.76800  
-75%      -1.0   0.764250   0.756250   0.773500   0.711500   0.77025  
-max      -1.0   0.773000   0.758000   0.780000   0.726000   0.77400  
-
-"""
-
+# rearding accuracy
 
 # first Adaboost 
 # second gridLr et gridRC
+# why not RF
+# then perc and NLT
 
-# results = first_approch_of_feat_eng(results, [1.5, 2.0, 2.5, 3.0, 3.5])
+
+###########################################################
+###########################################################
