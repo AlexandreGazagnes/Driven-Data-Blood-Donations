@@ -144,7 +144,7 @@ def grid_LogisticRegression(df=None, param=None,
 
     none_params     = {}
 
-    params          = { "penalty":["l2"],
+    test_params     = { "penalty":["l2"],
                         "dual":[True],
                         "tol":np.logspace(-6, 2, 9),
                         "C":np.logspace(-4, 2, 7),
@@ -631,24 +631,3 @@ max      -1.0   0.773000   0.758000   0.780000   0.726000   0.77400
 # second gridLr et gridRC
 
 # results = first_approch_of_feat_eng(results, [1.5, 2.0, 2.5, 3.0, 3.5])
-    
-best_params_for_logistic_reg = """
-
-C                         1
-acc                   0.819
-class_weight           None
-dual                  False
-fit_intercept          True
-intercept_scaling         1
-max_iter                100
-multi_class             ovr
-penalty                  l1
-solver                 saga
-tol                  0.0001
-warm_start             True
-Name: 38, dtype: object
-"""
-
-
-In [276]: 
-

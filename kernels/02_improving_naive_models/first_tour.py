@@ -55,23 +55,6 @@ TEST_FILE   = "test_data.csv"
 
 # functions
 
-def timer(funct) : 
-
-    def wrapper(*args, **kwargs) : 
-        
-        t = time.time()
-
-        res = funct(*args, **kwargs)
-
-        t = round(time.time() - t, 2)
-        msg = funct.__name__ + " : " + str(t) + " secs" 
-        print(msg)
-
-        return res
-
-    return wrapper
-
-
 def caller(funct) : 
 
     def wrapper(*args, **kwargs) : 
@@ -90,7 +73,24 @@ def caller(funct) :
     return wrapper
 
 
-# @timer
+def timer(funct) : 
+
+    def wrapper(*args, **kwargs) : 
+        
+        t = time.time()
+
+        res = funct(*args, **kwargs)
+
+        t = round(time.time() - t, 2)
+        msg = funct.__name__ + " : " + str(t) + " secs" 
+        print(msg)
+
+        return res
+
+    return wrapper
+
+
+# @timer                                    # UNCOMMENT IF NEEDED
 def finding_master_path(folder="data") :
     """just find our data folder in the repo structure from
     anywhere"""
@@ -112,7 +112,7 @@ def finding_master_path(folder="data") :
     return path
     
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def return_datasets(path) : 
 
     li = [i for i in os.listdir(path) if ".csv" in i ]
@@ -120,7 +120,7 @@ def return_datasets(path) :
     return li 
 
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def build_df(path, file) : 
 
     df          = pd.read_csv(path+file, index_col=0)
@@ -130,7 +130,7 @@ def build_df(path, file) :
     return df
 
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def print_df(df) : 
 
     print(df.ndim)
@@ -143,7 +143,7 @@ def print_df(df) :
     print(df.tail(3))
 
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def re_dtype(df) : 
 
     # li = [np.uint8, np.uint16]
@@ -161,7 +161,7 @@ def re_dtype(df) :
     return df 
 
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def graph_each_feature(df)  : 
 
     features = [i for i in df.columns if "target" not in i] 
@@ -188,7 +188,7 @@ def graph_each_feature(df)  :
     plt.show()
 
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def graph_corr_matrix(df) : 
 
     corr_mat = df.corr()
@@ -199,7 +199,7 @@ def graph_corr_matrix(df) :
     plt.show()
 
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def drop_corr_features(df) : 
 
     df = df.drop("vol_don", axis=1)
@@ -207,14 +207,14 @@ def drop_corr_features(df) :
     return df 
 
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def study_nas(df) : 
 
     print(df.isna().any())
     print(df.isna().any())
 
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def study_outliers(df, k=1.5) : 
 
     fig, _axes = plt.subplots(1, 5, figsize=(13,13))
@@ -235,7 +235,7 @@ def study_outliers(df, k=1.5) :
     plt.show()
 
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def return_outliers(ser, k) : 
 
     desc = ser.describe()
@@ -248,7 +248,7 @@ def return_outliers(ser, k) :
     return ser >= range_max
 
 
-# @timer
+# @timer                                    # UNCOMMENT IF NEEDED
 def delete_outliers(df, k) : 
 
     li = [i for i in df.columns if "target" not in i]
@@ -258,7 +258,7 @@ def delete_outliers(df, k) :
 
     return df
 
-
+@caller
 @timer
 def first_tour(folder="data", file=TRAIN_FILE) : 
 
