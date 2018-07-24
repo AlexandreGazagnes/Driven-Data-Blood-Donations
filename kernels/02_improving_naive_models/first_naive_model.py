@@ -32,7 +32,7 @@ from sklearn.linear_model import LogisticRegression
 
 from sklearn.metrics import accuracy_score, log_loss
 
-from first_tour import *
+# from first_tour import *
 
 
 # consts 
@@ -43,6 +43,7 @@ from first_tour import *
 
 # functions
 
+# @timer
 def return_X_y(df) : 
 
     X = df.drop("target", axis=1)
@@ -51,6 +52,7 @@ def return_X_y(df) :
     return X, y  
 
 
+# @timer
 def split(X,y) : 
 
     func = train_test_split
@@ -59,6 +61,7 @@ def split(X,y) :
     return tup
 
 
+# @timer
 def naive_model(df=None) :
 
     if not isinstance(df, pd.DataFrame): 
@@ -79,6 +82,7 @@ def naive_model(df=None) :
     return acc, None 
 
 
+# @timer
 def dummy_model(df=None) : 
 
     if not isinstance(df, pd.DataFrame): 
@@ -98,6 +102,7 @@ def dummy_model(df=None) :
     return acc, model
 
 
+# @timer
 def basic_model(df=None) : 
 
     if not isinstance(df, pd.DataFrame): 
@@ -117,6 +122,7 @@ def basic_model(df=None) :
     return acc, model
 
 
+@timer
 def model_accuracy_mean(model, nb=5, df=None) : 
 
     scores = pd.Series([model(df)[0] for i in range(nb)])
@@ -141,6 +147,7 @@ MODELS = [naive_model, dummy_model, basic_model]
 ##############################################################
 
 
+# @timer
 def add_new_results(results=None, feat_com=None, n=5, 
                     models=MODELS, columns= COLUMNS, 
                     df=None) : 
@@ -166,6 +173,7 @@ def add_new_results(results=None, feat_com=None, n=5,
     return results
 
 
+@timer
 def first_approch_of_feat_eng(  drop_list,
                                 results=None,
                                 n=5, 
@@ -195,6 +203,7 @@ def first_approch_of_feat_eng(  drop_list,
     return results
 
 
+@timer
 def first_naive_model() :  
 
     results = pd.DataFrame(columns=COLUMNS)

@@ -24,7 +24,7 @@ external research and more general considerations may be included in this work
 
 # import
 
-import os, sys, logging, random
+import os, sys, logging, random, time
 
 import pandas as pd
 import numpy as np
@@ -55,6 +55,42 @@ TEST_FILE   = "test_data.csv"
 
 # functions
 
+def timer(funct) : 
+
+    def wrapper(*args, **kwargs) : 
+        
+        t = time.time()
+
+        res = funct(*args, **kwargs)
+
+        t = round(time.time() - t, 2)
+        msg = funct.__name__ + " : " + str(t) + " secs" 
+        print(msg)
+
+        return res
+
+    return wrapper
+
+
+def caller(funct) : 
+
+    def wrapper(*args, **kwargs) : 
+
+        msg = funct.__name__ + " : called"
+        print(msg)
+        
+
+        res = funct(*args, **kwargs)
+
+        msg = funct.__name__ + " : ended"
+        print(msg)
+
+        return res
+
+    return wrapper
+
+
+# @timer
 def finding_master_path(folder="data") :
     """just find our data folder in the repo structure from
     anywhere"""
@@ -76,6 +112,7 @@ def finding_master_path(folder="data") :
     return path
     
 
+# @timer
 def return_datasets(path) : 
 
     li = [i for i in os.listdir(path) if ".csv" in i ]
@@ -83,6 +120,7 @@ def return_datasets(path) :
     return li 
 
 
+# @timer
 def build_df(path, file) : 
 
     df          = pd.read_csv(path+file, index_col=0)
@@ -92,6 +130,7 @@ def build_df(path, file) :
     return df
 
 
+# @timer
 def print_df(df) : 
 
     print(df.ndim)
@@ -104,6 +143,7 @@ def print_df(df) :
     print(df.tail(3))
 
 
+# @timer
 def re_dtype(df) : 
 
     # li = [np.uint8, np.uint16]
@@ -121,7 +161,7 @@ def re_dtype(df) :
     return df 
 
 
-
+# @timer
 def graph_each_feature(df)  : 
 
     features = [i for i in df.columns if "target" not in i] 
@@ -148,6 +188,7 @@ def graph_each_feature(df)  :
     plt.show()
 
 
+# @timer
 def graph_corr_matrix(df) : 
 
     corr_mat = df.corr()
@@ -158,6 +199,7 @@ def graph_corr_matrix(df) :
     plt.show()
 
 
+# @timer
 def drop_corr_features(df) : 
 
     df = df.drop("vol_don", axis=1)
@@ -165,12 +207,14 @@ def drop_corr_features(df) :
     return df 
 
 
+# @timer
 def study_nas(df) : 
 
     print(df.isna().any())
     print(df.isna().any())
 
 
+# @timer
 def study_outliers(df, k=1.5) : 
 
     fig, _axes = plt.subplots(1, 5, figsize=(13,13))
@@ -191,6 +235,7 @@ def study_outliers(df, k=1.5) :
     plt.show()
 
 
+# @timer
 def return_outliers(ser, k) : 
 
     desc = ser.describe()
@@ -203,6 +248,7 @@ def return_outliers(ser, k) :
     return ser >= range_max
 
 
+# @timer
 def delete_outliers(df, k) : 
 
     li = [i for i in df.columns if "target" not in i]
@@ -213,6 +259,7 @@ def delete_outliers(df, k) :
     return df
 
 
+@timer
 def first_tour(folder="data", file=TRAIN_FILE) : 
 
     # build data path
@@ -248,3 +295,4 @@ def first_tour(folder="data", file=TRAIN_FILE) :
     # df = delete_outliers(df, 3)           # UNCOMMENT IF NEEDED
 
     return df
+
