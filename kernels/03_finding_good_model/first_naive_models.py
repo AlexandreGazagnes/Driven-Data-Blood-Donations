@@ -218,4 +218,3 @@ def model_accuracy_mean(model, nb=5, df=None) :
 #     return results
 
 
-

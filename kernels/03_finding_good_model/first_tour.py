@@ -321,13 +321,9 @@ def first_tour(folder=None, file=None) :
 
 
 
-
-
-
-
 @caller
 @timer
-def build_df(folder=None, file=None) : 
+def build_df(file=TRAIN_FILE, folder=FOLDER) : 
 
     path = finding_master_path(folder)
     df = init_df(path, file)
