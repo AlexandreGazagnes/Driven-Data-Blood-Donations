@@ -1118,14 +1118,14 @@ def graph_benchmark_various_params_once(model, params, n_list=[1, 3, 5,]) : # 10
 def main() : 
 
     df = first_tour("data", TRAIN_FILE)
-    df = delete_outliers(df, 3.2)
+    df = delete_outliers(df, 3.3)
 
 
 
 
 
 
-    best_params_1   = { "C" :[1],
+    best_params_2   = { "C" :[0.0001],
                         "class_weight" :[None], 
                         "dual":[False],
                         "fit_intercept" :[True],
@@ -1133,14 +1133,18 @@ def main() :
                         "max_iter" :[100],
                         "multi_class" :["ovr"],
                         "penalty" :["l1"],
-                        "solver" :["saga"],
-                        "tol":[0.0001],
-                        "warm_start" :[True]     }
+                        "solver" :["saga", "liblinear"],
+                        "tol":np.logspace(-4, 1, 5),
+                        "warm_start" :[True, False]     }
+
 
     model = LogisticRegression
-    param = best_params_1
+    param = best_params_2
 
     acc, grid = run_GSCV(model, param, df)
+
+    print("acc = {}".format(acc))
+    input()
 
 
     path = finding_master_path("data")
@@ -1148,12 +1152,12 @@ def main() :
     df = drop_corr_features(df)
 
     y = grid.predict_proba(df)
-    y = y[0]
+    y = y[:,0]
 
     y = pd.Series(y, name="Made Donation in March 2007", index = df.index, dtype=np.float64)
     
     path = finding_master_path("submissions")
-    path += "submission1.csv"
+    path += "submission2.csv"
     y.to_csv(   path, index=True, 
                 header=True, index_label="")
 

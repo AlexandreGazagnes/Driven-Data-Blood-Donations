@@ -64,8 +64,8 @@ def beeper(funct) :
 def run_GSCV(   model, params, 
                 df=None, 
                 outliers=None, regularize=None,
-                cv=10, n_jobs=6, scoring="neg_log_loss",
-                verbose=0) : 
+                cv=5, n_jobs=6, scoring="accuracy",
+                verbose=1, return_train_score=False) : 
 
     model = model()
 
@@ -100,7 +100,8 @@ def run_GSCV(   model, params,
                                 cv=cv, 
                                 n_jobs=n_jobs,
                                 scoring=scoring, 
-                                verbose=verbose)
+                                verbose=verbose,
+                                return_train_score=return_train_score)
 
     X_train, X_test, y_train, y_test = t 
     grid.fit(X_train, y_train)
@@ -109,7 +110,13 @@ def run_GSCV(   model, params,
     info(grid.best_score_)
     info(grid.best_params_)
 
-    y_pred = grid.predict(X_test)
+
+    try : 
+        y_pred = grid.predict_proba(X_test)
+        y_pred = y_pred[:,1]
+    except : 
+        y_pred = grid.predict(X_test)
+    
     lolo = log_loss(y_test, y_pred).round(3)
     info(lolo)
 
@@ -135,19 +142,31 @@ def grid_LogisticRegression(df=None, param=None,
 
     all_params      = { "penalty":["l1", "l2"],
                         "dual":[True, False],
-                        "tol":[0.0001],  # consider also np.logspace(-6, 2, 9)
-                        "C":[1.0],      # consider also np.logspace(-4, 2, 7)
+                        "tol":[0.0001, 0.001, 0.1, 1],                   # consider also np.logspace(-6, 2, 9)
+                        "C":[0.0001, 0.001, 0.01, 0.1, 1, 10, 100],      # consider also np.logspace(-3, 1, 40)
+                        "fit_intercept":[True],
+                        "intercept_scaling":[1],
+                        "class_weight":[None],
+                        "solver":["newton-cg", "lbfgs", "liblinear", "sag", "saga"],
+                        "max_iter":[100, 1000],   # consider also np.logspace(3, 5, 3)
+                        "multi_class":["ovr", "multinomial"],
+                        "warm_start":[False, True],   }
+
+    all_params2     = { "penalty":["l1", "l2"],
+                        "dual":[True, False],
+                        "tol":[0.0001, 0.001, ],                   # consider also np.logspace(-6, 2, 9)
+                        "C":[0.001, 0.01, 0.1, 1, 10],      # consider also np.logspace(-3, 1, 40)
                         "fit_intercept":[True],
                         "intercept_scaling":[1],
                         "class_weight":[None],
                         "solver":["newton-cg", "lbfgs", "liblinear", "sag", "saga"],
                         "max_iter":[100],   # consider also np.logspace(3, 5, 3)
                         "multi_class":["ovr", "multinomial"],
-                        "warm_start":[False, True],   }
+                        "warm_start":[True],   }
 
     none_params     = {}
 
-    best_params_1   = { "C" :[1],
+    best_params_1   = { "C" :[0.11],
                         "class_weight" :[None], 
                         "dual":[False],
                         "fit_intercept" :[True],
@@ -159,17 +178,17 @@ def grid_LogisticRegression(df=None, param=None,
                         "tol":[0.0001],
                         "warm_start" :[True]     }
 
-    best_params_2   = { "C" :np.logspace(-4, 2, 7),
+    best_params_2   = { "C" :[0.0001],
                         "class_weight" :[None], 
                         "dual":[False],
                         "fit_intercept" :[True],
                         "intercept_scaling" :[1],
-                        "max_iter" :np.logspace(3, 5, 3),
+                        "max_iter" :[100],
                         "multi_class" :["ovr"],
                         "penalty" :["l1"],
-                        "solver" :["saga"],
-                        "tol":np.logspace(-6, 2, 9),
-                        "warm_start" :[True]     }
+                        "solver" :["saga", "liblinear"],
+                        "tol":np.logspace(-4, 1, 5),
+                        "warm_start" :[True, False]     }
 
 
     if not param :  param = none_params
@@ -204,9 +223,6 @@ def grid_RidgeClassifier(   df=None, param=None,
                         "class_weight":[None],
                         "solver":["auto", "svd", "cholesky", "lsqr", "sparse_cg", "sag", "saga"],
                         "random_state":[None]       }
-
-
-
 
 
     none_params     = {}
@@ -558,7 +574,7 @@ def benchmark_various_params_once(model, params, n) :
             lolo, grid_param = -100.0, "invalid dict of args"
             info("invalid params")
             info(str(param))
-            info(e)
+            # info(e)
 
         serie = {i: j[0] for i,j in param.items()}
         serie["lolo"] = lolo
@@ -571,7 +587,7 @@ def benchmark_various_params_once(model, params, n) :
     mask = results.lolo != -100.0
     results = results[mask]
 
-    results.sort_values(by="lolo", ascending=False, inplace=True)
+    results.sort_values(by="lolo", ascending=True, inplace=True)
 
     return results
 
@@ -645,5 +661,3 @@ def graph_benchmark_various_params_once(model, params, n_list=[1, 3, 5,]) : # 10
 # then perc and NLT
 
 
-###########################################################
-###########################################################

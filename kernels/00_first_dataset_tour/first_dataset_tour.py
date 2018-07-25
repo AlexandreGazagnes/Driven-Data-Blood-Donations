@@ -3,7 +3,7 @@
 
 
 """
-00-first-tour.py
+first_dataset_tour.py
 """
 
 
@@ -49,6 +49,8 @@ info = logging.info
 # consts
 
 FOLDER      = "Driven-Data-Blood-Donations"
+DATA        = "data"
+SUBMISSIONS = "submissions"
 TRAIN_FILE  = "training_data.csv"
 TEST_FILE   = "test_data.csv"
 
@@ -91,7 +93,7 @@ def timer(funct) :
 
 
 # @timer                                    # UNCOMMENT IF NEEDED
-def finding_master_path(folder="data") :
+def finding_master_path(folder) :
     """just find our data folder in the repo structure from
     anywhere"""
 
@@ -115,15 +117,13 @@ def finding_master_path(folder="data") :
 # @timer                                    # UNCOMMENT IF NEEDED
 def return_datasets(path) : 
 
-    li = [i for i in os.listdir(path) if ".csv" in i ]
-    
-    return li 
+    return [i for i in os.listdir(path) if ".csv" in i ]
 
 
 # @timer                                    # UNCOMMENT IF NEEDED
-def build_df(path, file) : 
+def init_df(path, file) : 
 
-    df          = pd.read_csv(path+file, index_col=0)
+    df = pd.read_csv(path+file, index_col=0)
 
     if len(df.columns)  == 5 : 
         df.columns  = pd.Index( ["last_don", "num_don","vol_don", "first_don", 
@@ -161,7 +161,7 @@ def print_df(df) :
     print("\n\ndata frame tail :        \n")
     print(df.tail(3))
 
-    print("\n\ndata frame resume :      \n")
+    print("\n\ndata frame desc :      \n")
     print(df.describe())
 
 
@@ -177,10 +177,7 @@ def re_dtype(df) :
                         "first_don" : np.uint8, 
                         "target"    : np.uint8       }
 
-
-    df = df.astype(dtypes_dict)
-
-    return df 
+    return df.astype(dtypes_dict) 
 
 
 # @timer                                    # UNCOMMENT IF NEEDED
@@ -210,6 +207,12 @@ def graph_each_feature(df)  :
     plt.show()
 
 
+# @timer   
+def graph_target(df) : 
+
+    pass
+
+
 # @timer                                    # UNCOMMENT IF NEEDED
 def graph_corr_matrix(df) : 
 
@@ -232,7 +235,9 @@ def drop_corr_features(df) :
 # @timer                                    # UNCOMMENT IF NEEDED
 def study_nas(df) : 
 
-    print(df.isna().any())
+    print("nas all : ")
+    print(df.isna().all())
+    print("nas any : ")
     print(df.isna().any())
 
 
@@ -248,11 +253,10 @@ def study_outliers(df, k=1.5) :
 
     for i, feat in enumerate(df.columns) :
         info(i, feat)
-
         axes[i].boxplot(df[feat], whis=k)
         axes[i].set_title(feat)
 
-    plt.suptitle("features outliers, k of {}".format(whis))
+    plt.suptitle("features outliers for k > {}".format(k))
     
     plt.show()
 
@@ -273,49 +277,64 @@ def return_outliers(ser, k) :
 # @timer                                    # UNCOMMENT IF NEEDED
 def delete_outliers(df, k) : 
 
-    li = [i for i in df.columns if "target" not in i]
+    features = [i for i in df.columns if "target" not in i]
 
-    for feat in li : 
+    for feat in features : 
         df = df[return_outliers(df[feat], k) == False]
 
     return df
 
+
 @caller
 @timer
-def first_tour(folder="data", file=TRAIN_FILE) : 
+def first_tour(folder=None, file=None) : 
 
     # build data path
     path = finding_master_path(folder)
-    # info(path)                            # UNCOMMENT IF NEEDED
+    print(path)                             # UNCOMMENT IF NEEDED
 
     # just show dataset list
-    # datasets = return_datasets(path)      # UNCOMMENT IF NEEDED
-    # info(datasets)                        # UNCOMMENT IF NEEDED
+    datasets = return_datasets(path)        # UNCOMMENT IF NEEDED
+    print(datasets)                         # UNCOMMENT IF NEEDED
 
     # build our df
-    df = build_df(path, file)
+    df = init_df(path, file)
 
     # print main info
-    # print_df(df)                          # UNCOMMENT IF NEEDED
+    print_df(df)                            # UNCOMMENT IF NEEDED
 
     # (overkilled) recast dataframe in a better dtype
     df = re_dtype(df)
 
     # graph features distr and correlation  # UNCOMMENT IF NEEDED
-    # graph_each_feature(df)                  
-    # graph_corr_matrix(df)                 # UNCOMMENT IF NEEDED
+    graph_each_feature(df)                  
+    graph_corr_matrix(df)                   # UNCOMMENT IF NEEDED
 
     # drop corr values
     df = drop_corr_features(df)
 
     # nas
-    # study_nas(df)                         # UNCOMMENT IF NEEDED
+    study_nas(df)                           # UNCOMMENT IF NEEDED
 
-    # for i in [1.5, 2, 2.5, 3] :           # UNCOMMENT IF NEEDED
-    # study_outliers(df, i)                 # UNCOMMENT IF NEEDED
+    for i in [1.5, 2, 2.5, 3] :             # UNCOMMENT IF NEEDED
+        study_outliers(df, i)               # UNCOMMENT IF NEEDED
 
-    # df = delete_outliers(df, 3)           # UNCOMMENT IF NEEDED
+
+
+
+
+
+
+@caller
+@timer
+def build_df(folder=None, file=None) : 
+
+    path = finding_master_path(folder)
+    df = init_df(path, file)
+    df = re_dtype(df)
+    df = drop_corr_features(df)
 
     return df
+
 
 

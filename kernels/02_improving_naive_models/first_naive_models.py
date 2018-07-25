@@ -53,10 +53,10 @@ def return_X_y(df) :
 
 
 # @timer
-def split(X,y) : 
+def split(X,y, size=0.33) : 
 
     func = train_test_split
-    tup = train_test_split(X, y)
+    tup = train_test_split(X, y,test_size=size)
     
     return tup
 
@@ -95,7 +95,8 @@ def dummy_model(df=None) :
 
     model = DummyClassifier()
     model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
+    y_pred = model.predict_proba(X_test)
+    y_pred = y_pred[:, 1]
 
     lolo = log_loss(y_test, y_pred).round(3)
 
@@ -115,7 +116,8 @@ def basic_model(df=None) :
 
     model = LogisticRegression()
     model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
+    y_pred = model.predict_proba(X_test)
+    y_pred = y_pred[:, 1]
 
     lolo = log_loss(y_test, y_pred).round(3)
     

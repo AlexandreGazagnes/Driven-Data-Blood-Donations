@@ -18,6 +18,10 @@ blablabla
 
 # import
 
+from sklearn.pipeline import Pipeline
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler, normalize, Normalizer, MinMaxScaler
+
 from improving_naive_models import * 
 
 
@@ -25,7 +29,8 @@ from improving_naive_models import *
 
 def outliers_impact_once(graph=False) : 
 
-    best_params_1   = { "C" :[1],
+    best_params_2   = { "C" :[  0.00001, 0.00003, 0.00006,
+                                0.0001, 0.0003, ],
                         "class_weight" :[None], 
                         "dual":[False],
                         "fit_intercept" :[True],
@@ -33,38 +38,38 @@ def outliers_impact_once(graph=False) :
                         "max_iter" :[100],
                         "multi_class" :["ovr"],
                         "penalty" :["l1"],
-                        "solver" :["saga"],
-                        "tol":[0.0001],
-                        "warm_start" :[True]     }
+                        "solver" :["saga", "liblinear"],
+                        "tol":np.logspace(-5, 1, 12),
+                        "warm_start" :[True, False]     }
 
     model = LogisticRegression
-    param = best_params_1
+    param = best_params_2
 
-    results = list()
+    columns = ["k", "lolo", "params"]
 
-    threshold_list = np.arange(1.4, 3.7, 0.1)
+    results = pd.DataFrame(columns=columns)
+
+    threshold_list = np.arange(0.9, 5.1, 0.1)
     for i in threshold_list : 
 
 
         df = first_tour()
         df = delete_outliers(df, i)
 
-        lolo = run_GSCV(model, param, df)[0]
+        lolo, grid = run_GSCV(model, param, df)
 
-        results.append([round(i, 2), lolo])
+        r = pd.Series([round(i, 2), lolo, grid.best_params_], index=columns)
+
+        results = results.append(r, ignore_index=True)
 
     if graph : 
-        x, y = zip(*results)
-        plt.plot(x, y)
+        plt.plot(results.k, results.lolo)
         plt.show()
-
-
-    results = pd.Series([i[1] for i in results], index = [i[0] for i in results])
 
     return results
 
 
-def outlier_impacts_multi(n=10, graph=False) : 
+def outlier_impacts_multi(n=10, graph=True) : 
 
     r = outliers_impact_once() 
 
@@ -82,3 +87,164 @@ def outlier_impacts_multi(n=10, graph=False) :
 
     return results
 
+
+
+
+
+def pipe_various_things(): 
+
+    df          = first_tour()
+    X,y         = return_X_y(df)
+    t           = split(X,y)
+
+
+
+    model       = LogisticRegression()
+    params      = {}
+    cv          = 10
+    scoring     = "neg_log_loss"
+    verbose     =1
+    n_jobs      =5
+    grid        = GridSearchCV( estimator=model, 
+                                param_grid=params,  
+                                cv=cv, 
+                                n_jobs=n_jobs,
+                                scoring=scoring, 
+                                verbose=verbose)
+
+
+    pipe_grid = Pipeline([      ("scaler", StandardScaler()),
+                                ("pca", PCA()),
+                                ('model', LogisticRegression()) ])
+
+
+    X_train, X_test, y_train, y_test = t 
+    pipe_grid.fit(X_train, y_train)
+
+    # info(pipe_grid.best_estimator_)
+    # info(pipe_grid.best_score_)
+    # info(pipe_grid.best_params_)
+
+    y_pred = pipe_grid.predict(X_test)
+    lolo = log_loss(y_test, y_pred).round(3)
+    info(lolo)
+
+
+    return lolo, grid
+
+
+
+
+
+
+def studying_param_by_param(model, param) : 
+
+    lolo, grid = run_GSCV(model, param)
+
+    gcv = pd.DataFrame(grid.cv_results_)
+
+    p = [i for i in gcv.columns if "param_" in i ][0]
+    good = ["mean_test_score", "mean_train_score", "rank_test_score", p]
+
+    gcv = gcv.loc[:, good]
+
+    gcv.set_index(p, drop=True, inplace=True)
+
+    fig, axes = plt.subplots(1, 2)
+
+    gcv1 = gcv.drop("rank_test_score", axis=1)
+    gcv1.plot(logx=True, ax=axes[0])
+
+    gcv2 = gcv.rank_test_score
+    gcv2.plot(logx=True, ax=axes[1])
+
+    plt.show()
+
+
+
+
+
+def corr_between_lolo_and_neg_lolo(model, param) :
+
+
+    k = ["lolo", "neg_lolo"]
+
+    results = pd.DataFrame(columns=k)
+
+    key, values = list(param.items())[0]
+
+    for  val in values : 
+
+        d = {key:[val]}
+
+        lolo, grid = run_GSCV(model, d)
+
+        results = results.append(pd.Series([lolo, grid.best_score_], index=k ), ignore_index=True)
+
+
+    plt.scatter(results.lolo, results.neg_lolo, marker=".")
+    plt.xlabel("lolo")
+    plt.ylabel("neg_lolo")
+    plt.title("param" + str(key))
+    plt.show()
+
+    return results
+
+
+
+def do_scale(df=None) : 
+
+    if not isinstance(df, pd.DataFrame) : 
+        df = first_tour()
+
+
+    X = df.drop("target", axis=1)
+    y = df.target
+
+    scaler = StandardScaler()
+    _X = scaler.fit_transform(X)
+    _X = pd.DataFrame(_X, columns=X.columns, index=X.index)
+    _X["target"] = y
+
+    df = _X
+
+    return df
+
+
+
+def do_normalize(df=None, norm=None) : 
+
+
+    if not isinstance(df, pd.DataFrame) : 
+        df = first_tour()
+
+
+    X = df.drop("target", axis=1)
+    y = df.target
+
+    _X = normalize(X, norm=norm)
+
+    _X = pd.DataFrame(_X, columns=X.columns, index=X.index)
+    _X["target"] = y
+
+    df = _X
+    return df
+
+
+def do_min_max(df=None) : 
+
+    if not isinstance(df, pd.DataFrame) : 
+        df = first_tour()
+
+
+    X = df.drop("target", axis=1)
+    y = df.target
+
+    scaler =  MinMaxScaler()
+    _X = scaler.fit_transform(X)
+    _X = pd.DataFrame(_X, columns=X.columns, index=X.index)
+    _X["target"] = y
+
+    df = _X
+
+    return df
