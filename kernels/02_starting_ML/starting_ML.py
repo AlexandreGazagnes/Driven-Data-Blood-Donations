@@ -46,6 +46,7 @@ from first_naive_models import *
 # functions
 
 def beeper(funct) : 
+    """decorator to beep when a long algo as finished"""
 
     def wrapper(*args, **kwargs) : 
         
@@ -104,6 +105,7 @@ def run_GSCV(   model=None, params=None,
 
     grid = None
 
+    info(model.__class__)
     info("\n\nbefore grid init")
     try :       
         grid        = GridSearchCV( estimator=model, 
@@ -181,25 +183,21 @@ def run_GSCV(   model=None, params=None,
 #############################################################
 
 
-COLUMNS = [     "dummy", "basic",
-                "LR",       "RC",
+COLUMNS = [     "LR",       "RC",
                 "SVC",      # "Nu",
                 "KNN",
                 "DT", 
                 "RF", 
                 "Ada", 
-                "Per",      "MLP",
+                "Per",      "MLP"   ]
 
-                "features eng."]
-
-MODELS = [      dummy_model, basic_model, 
-                LogisticRegression, RidgeClassifier,
+MODELS = [      LogisticRegression, RidgeClassifier,
                 LinearSVC, # NuSVC,
                 KNeighborsClassifier,
                 DecisionTreeClassifier,
                 RandomForestClassifier,
                 AdaBoostClassifier,
-                Perceptron, MLPClassifier]
+                Perceptron, MLPClassifier   ]
 
 
 #############################################################
@@ -207,17 +205,17 @@ MODELS = [      dummy_model, basic_model,
 
 
 # @timer
-def benchmark_various_models_once(  n=5, df=None, 
+def benchmark_various_models_once(  n=5, df=None, graph=True
                                     models = MODELS, columns= COLUMNS) : 
 
     if not isinstance(df, pd.DataFrame): 
         df = build_df(DATA, TRAIN_FILE)
 
-    models  = models
-    columns = columns[:-1]
-    
     if len(models) != len(columns) : 
         raise ValueError("lens not goods")
+
+
+    # results = [[run_GSCV(m, dict(), df) for m in models] for i in range(n)]
 
     results = list()
 
@@ -243,9 +241,6 @@ def benchmark_various_models_multi(   N=10, n=10, df=None, graph=True,
     if not isinstance(df, pd.DataFrame): 
         df = build_df(DATA, TRAIN_FILE)
 
-    models  = models
-    columns = columns[:-1]
-    
     if len(models) != len(columns) : 
         raise ValueError("lens not goods")
 
@@ -390,9 +385,6 @@ def benchmark_various_outliers_models(n=5, df=None, graph=True,
         k_list = np.arange(10,50,1)
         k_list = (k_list/10).round(1) 
 
-    models  = models
-    columns = columns[:-1]
-    
     if len(models) != len(columns) : 
         raise ValueError("lens not goods")
 
@@ -560,9 +552,6 @@ def benchmark_various_transform_models(  n=10, df=None, graph=True,
     if not isinstance(df, pd.DataFrame): 
         df = build_df(DATA, TRAIN_FILE)
 
-    models  = MODELS
-    columns = COLUMNS[:-1]
-    
     if len(models) != len(columns) : 
         raise ValueError("lens not goods")
 
@@ -598,7 +587,7 @@ def benchmark_various_grid_once(n=5, df=None, model=None, param_type="cv") :
         cv_list         = None
         scoring_list    = None
     
-    elif param_type = "scoring": 
+    elif param_type == "scoring": 
         cv_list         = None
         test_size_list  = None
 
@@ -637,7 +626,7 @@ def benchmark_various_grid_once(n=5, df=None, model=None, param_type="cv") :
 
 
 
-        
+
     info(results)
 
     return results
