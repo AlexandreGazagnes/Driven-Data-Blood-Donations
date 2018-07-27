@@ -53,23 +53,20 @@ def return_X_y(df) :
         return X, y  
 
     else : 
-        raise ValueError("wrong dataframe")
+        return df
 
 
 # @timer
 def split(X,y, size=0.33) : 
 
-    func = train_test_split
-    tup = train_test_split(X, y, test_size=size)
-    
-    return tup
+    return train_test_split(X, y, test_size=size)
 
 
 # @timer
-def naive_model(df=None) :
+def naive_model(param=None, df=None) :
 
     if not isinstance(df, pd.DataFrame): 
-        df = build_df()
+        df = build_df(DATA, TRAIN_FILE)
 
     X,y     = return_X_y(df)
     X_train, X_test, y_train, y_test  = split(X,y)
@@ -85,18 +82,17 @@ def naive_model(df=None) :
 
 
 # @timer
-def dummy_model(df=None) : 
+def dummy_model(param=None, df=None) : 
 
     if not isinstance(df, pd.DataFrame): 
-        df = build_df()
+        df = build_df(DATA, TRAIN_FILE)
     
     X,y     = return_X_y(df)
     X_train, X_test, y_train, y_test = split(X,y)
 
     model = DummyClassifier()
     model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    y_pred = y_pred[:, 1]
+    y_pred = model.predict(X_test) 
 
     lolo = log_loss(y_test, y_pred).round(3)
 
@@ -104,10 +100,10 @@ def dummy_model(df=None) :
 
 
 # @timer
-def basic_model(df=None) : 
+def basic_model(param=None, df=None) : 
 
     if not isinstance(df, pd.DataFrame): 
-        df = build_df()
+        df = build_df(DATA, TRAIN_FILE)
     
     X,y     = return_X_y(df)
 
@@ -123,11 +119,14 @@ def basic_model(df=None) :
     return lolo, model
 
 
-@timer
-def model_accuracy_mean(model, nb=5, df=None) : 
+# @timer
+def model_accuracy_mean(model=None, nb=5, df=None) : 
     
     if not isinstance(df, pd.DataFrame): 
-        df = build_df()
+        df = build_df(DATA, TRAIN_FILE)
+
+    if not model : 
+        model = LogisticRegression
 
     scores = pd.Series([model(df)[0] for i in range(nb)])
 
@@ -192,7 +191,7 @@ def model_accuracy_mean(model, nb=5, df=None) :
 
 #     for i in drop_list : 
 
-#         df = build_df()
+#         df = build_df(DATA, TRAIN_FILE)
 #         df = delete_outliers(df, i) 
 
 #         feat_com = "drop outliers > " + str(i)
@@ -216,5 +215,6 @@ def model_accuracy_mean(model, nb=5, df=None) :
 #     results = first_approch_of_feat_eng([1.5, 2.0, 2.5, 3.0, 3.5])
     
 #     return results
+
 
 
