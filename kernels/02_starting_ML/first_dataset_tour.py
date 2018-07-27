@@ -48,7 +48,7 @@ info = logging.info
 
 # consts
 
-FOLDER      = "Driven-Data-Blood-Donations"
+PROJECT     = "Driven-Data-Blood-Donations"
 DATA        = "data"
 SUBMISSIONS = "submissions"
 TRAIN_FILE  = "training_data.csv"
@@ -58,6 +58,7 @@ TEST_FILE   = "test_data.csv"
 # functions
 
 def caller(funct) : 
+    """decorator to give call and end of a function"""
 
     def wrapper(*args, **kwargs) : 
 
@@ -76,6 +77,7 @@ def caller(funct) :
 
 
 def timer(funct) : 
+    """decorator to give runing time of a function"""
 
     def wrapper(*args, **kwargs) : 
         
@@ -93,14 +95,14 @@ def timer(funct) :
 
 
 # @timer                                    # UNCOMMENT IF NEEDED
-def finding_master_path(folder) :
+def finding_master_path(folder, project=PROJECT) :
     """just find our data folder in the repo structure from
     anywhere"""
 
     path = os.getcwd()
     path = path.split("/")
 
-    idx  = path.index(FOLDER)
+    idx  = path.index(project)
     path = path[:idx+1]
     folder = str(folder) + "/"
     path.append(folder)
@@ -108,11 +110,16 @@ def finding_master_path(folder) :
     path = "/".join(path)
 
     # check if path is a valid path
-    if not os.path.isdir(path) : 
-        raise NotADirectoryError
-
-    return path
+    if os.path.isdir(path) : 
+        return path
     
+    li = [i for i in os.listdir() if (os.path.isdir(i) and (i[0]!="."))]
+    if project in li : 
+        path = os.getcwd + "/" + project
+        return path
+
+    return ValueError("project not found, please 'cd project")
+
 
 # @timer                                    # UNCOMMENT IF NEEDED
 def return_datasets(path) : 
@@ -183,9 +190,11 @@ def re_dtype(df) :
 # @timer                                    # UNCOMMENT IF NEEDED
 def graph_each_feature(df)  : 
 
-    features = [i for i in df.columns if "target" not in i] 
+    # features = [i for i in df.columns if "target" not in i] 
 
-    fig, _axes = plt.subplots(2, 2, figsize=(13,13))
+    features = df.columns
+
+    fig, _axes = plt.subplots(2, 3, figsize=(13,13))
     axes = _axes.flatten()
 
     info(fig)
@@ -195,9 +204,14 @@ def graph_each_feature(df)  :
     for i, feat in enumerate(features) :
         info(i, feat)
 
+
         # -----------------------------------------
+
+        # use sns.pairplot() !!!!!!
         # sns.distplot --> (kde=True ) ???
+        
         # -----------------------------------------
+
 
         axes[i].hist(df[feat], bins=30)
         axes[i].set_title(feat)
@@ -237,7 +251,7 @@ def study_nas(df) :
 
     print("nas all : ")
     print(df.isna().all())
-    print("nas any : ")
+    print("\n\nnas any : ")
     print(df.isna().any())
 
 
@@ -286,11 +300,11 @@ def delete_outliers(df, k) :
 
 
 @caller
-@timer
-def first_tour(folder=None, file=None) : 
+# @timer
+def first_tour(folder=None, filename=None, project=PROJECT) : 
 
     # build data path
-    path = finding_master_path(folder)
+    path = finding_master_path(folder, project)
     print(path)                             # UNCOMMENT IF NEEDED
 
     # just show dataset list
@@ -298,7 +312,7 @@ def first_tour(folder=None, file=None) :
     print(datasets)                         # UNCOMMENT IF NEEDED
 
     # build our df
-    df = init_df(path, file)
+    df = init_df(path, filename)
 
     # print main info
     print_df(df)                            # UNCOMMENT IF NEEDED
@@ -321,15 +335,11 @@ def first_tour(folder=None, file=None) :
 
 
 
-
-
-
-
 @caller
-@timer
-def build_df(folder=None, filename=None) : 
+# @timer
+def build_df(folder=None, filename=None, project=PROJECT) : 
 
-    path = finding_master_path(folder)
+    path = finding_master_path(folder, project)
     df = init_df(path, filename)
     df = re_dtype(df)
     df = drop_corr_features(df)
