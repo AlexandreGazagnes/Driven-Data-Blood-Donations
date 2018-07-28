@@ -178,13 +178,25 @@ def re_dtype(df) :
     # li = [np.uint8, np.uint16]
     # [print(i,  np.iinfo(i).min, np.iinfo(i).max) for i in li]
 
-    dtypes_dict = {     "last_don"  : np.uint8, 
+    if len(df.columns) == 5 : 
+        dtypes_dict = { "last_don"  : np.uint8, 
                         "num_don"   : np.uint8,
                         "vol_don"   : np.uint16, 
                         "first_don" : np.uint8, 
                         "target"    : np.uint8       }
 
-    return df.astype(dtypes_dict) 
+        return df.astype(dtypes_dict)
+
+    elif len(df.columns) == 4 : 
+        dtypes_dict = { "last_don"  : np.uint8, 
+                        "num_don"   : np.uint8,
+                        "vol_don"   : np.uint16, 
+                        "first_don" : np.uint8,      }
+
+        return df.astype(dtypes_dict) 
+
+    raise ValueError("pb occured")
+
 
 
 # @timer                                    # UNCOMMENT IF NEEDED

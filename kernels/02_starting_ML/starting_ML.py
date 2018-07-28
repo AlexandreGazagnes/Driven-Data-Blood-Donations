@@ -118,6 +118,8 @@ def run_GSCV(   model=None,     params=None,
         print(e)
         if debug_mode : input()
 
+        raise ValueError("pb run_GSCV") 
+
     # pred
     try :
         y_pred = grid.predict_proba(X_te)
@@ -181,7 +183,7 @@ MODELS = [      LogisticRegression, RidgeClassifier,
 
 
 # @timer
-def benchmark_various_models(  n=5, df=None, graph=True,
+def benchmark_various_models(  n=5, df=None, graph=True, params=None,
                                     models = MODELS, columns= COLUMNS) : 
 
     if not isinstance(df, pd.DataFrame): 
@@ -190,7 +192,9 @@ def benchmark_various_models(  n=5, df=None, graph=True,
     if len(models) != len(columns) : 
         raise ValueError("lens not goods")
 
-    results = [     pd.Series([run_GSCV(m, dict(), df)[0] for m in models], 
+    if not params : params = dict()    
+
+    results = [     pd.Series([run_GSCV(m, params, df)[0] for m in models], 
                         index=columns) for i in range(n)]
     
     results = pd.DataFrame(results, columns=columns)
@@ -208,7 +212,7 @@ def benchmark_various_models(  n=5, df=None, graph=True,
     return results
 
 
-def benchmark_various_outliers(     n=5, df=None, graph=True,
+def benchmark_various_outliers(     n=5, df=None, graph=True, params=None,
                                     k_list=None, model=None ) :
 
     if not isinstance(df, pd.DataFrame): 
@@ -218,10 +222,11 @@ def benchmark_various_outliers(     n=5, df=None, graph=True,
         k_list = np.arange(10,50,1)
         k_list = (k_list/10).round(1) 
 
-    if not model : 
-        model = LogisticRegression
+    if not model : model = LogisticRegression
 
-    results = [ pd.Series([run_GSCV(model, dict(), delete_outliers(df, k))[0] for k in k_list], 
+    if not params : params = dict() 
+
+    results = [ pd.Series([run_GSCV(model, params, delete_outliers(df, k))[0] for k in k_list], 
                         index=k_list) for i in range(n)]
     
     results = pd.DataFrame(results, columns=k_list)
@@ -237,7 +242,7 @@ def benchmark_various_outliers(     n=5, df=None, graph=True,
     return results.describe()
 
 
-# def benchmark_various_outliers_models(n=5, df=None, graph=True,
+# def benchmark_various_outliers_models(n=5, df=None, graph=True, params=None,
 #                                     k_list=None, models = MODELS, columns= COLUMNS) : 
 
     
@@ -251,7 +256,7 @@ def benchmark_various_outliers(     n=5, df=None, graph=True,
     # if len(models) != len(columns) : 
     #     raise ValueError("lens not goods")
 
-    # results = [     pd.Series([run_GSCV(m, dict(), df)[0] for m in models], 
+    # results = [     pd.Series([run_GSCV(m, params, df)[0] for m in models], 
     #                     index=columns) for i in range(n)]
     
     # results = pd.DataFrame(results, columns=columns)
@@ -348,19 +353,20 @@ TRANSFORM_LIST = [nothing, normalize, standscale, min_max]
 TRANSFORM_INDEX = ["nothing", "normalize", "standscale", "min_max"]
 
 
-def benchmark_various_transform(   n=10, df=None, graph=True, model=None,
+def benchmark_various_transform(   n=10, df=None, graph=True, params=None, model=None,
                                     transform_list=TRANSFORM_LIST, transform_index = TRANSFORM_INDEX) : 
 
     if not isinstance(df, pd.DataFrame): 
         df = build_df(DATA, TRAIN_FILE)
 
-    if not model : 
-        model =  LogisticRegression
+    if not model : model =  LogisticRegression
+
+    if not params : params = dict() 
 
     if len(transform_list) != len(transform_index) : 
         raise ValueError("lens not goods")
 
-    results = [     pd.Series([run_GSCV(model, dict(), transf(df))[0] for transf in transform_list], 
+    results = [     pd.Series([run_GSCV(model, params, transf(df))[0] for transf in transform_list], 
                         index=transform_index) for i in range(n)]
     
     results = pd.DataFrame(results, columns=transform_index)
@@ -378,7 +384,7 @@ def benchmark_various_transform(   n=10, df=None, graph=True, model=None,
     return results
 
 
-# def benchmark_various_transform_models(  n=10, df=None, graph=True, 
+# def benchmark_various_transform_models(  n=10, df=None, graph=True, params=None, 
 #                                         transform_list=None, models = MODELS, columns= COLUMNS) : 
     
 #     if not isinstance(df, pd.DataFrame): 
@@ -400,7 +406,7 @@ def benchmark_various_transform(   n=10, df=None, graph=True, model=None,
 #############################################################
 
 
-def benchmark_various_scoring(  n=5, df=None, graph=True, model=None,
+def benchmark_various_scoring(  n=5, df=None, graph=True, params=None, model=None,
                                 scoring_list=None) : 
 
     if not isinstance(df, pd.DataFrame): 
@@ -409,10 +415,11 @@ def benchmark_various_scoring(  n=5, df=None, graph=True, model=None,
     if not scoring_list : 
         scoring_list = ['accuracy', 'neg_log_loss', 'f1', 'average_precision', 'precision', 'recall']
 
-    if not model : 
-        model = LogisticRegression
+    if not model : model = LogisticRegression
 
-    results = [ pd.Series([run_GSCV(model, dict(), df, scoring=s)[0] for s in scoring_list], 
+    if not params : params = dict() 
+
+    results = [ pd.Series([run_GSCV(model, params, df, scoring=s)[0] for s in scoring_list], 
                         index=scoring_list) for i in range(n)]
     
     results = pd.DataFrame(results, columns=scoring_list)
@@ -430,7 +437,7 @@ def benchmark_various_scoring(  n=5, df=None, graph=True, model=None,
     return results
 
 
-def benchmark_various_cv(   n=5, df=None, graph=True, model=None,
+def benchmark_various_cv(   n=5, df=None, graph=True, params=None, model=None,
                             cv_list=None) : 
 
     if not isinstance(df, pd.DataFrame): 
@@ -442,7 +449,9 @@ def benchmark_various_cv(   n=5, df=None, graph=True, model=None,
     if not model : 
         model = LogisticRegression
 
-    results = [ pd.Series([run_GSCV(model, dict(), df, cv=c)[0] for c in cv_list], 
+    if not params : params = dict() 
+
+    results = [ pd.Series([run_GSCV(model, params, df, cv=c)[0] for c in cv_list], 
                         index=cv_list) for i in range(n)]
     
     results = pd.DataFrame(results, columns=cv_list)
@@ -459,7 +468,7 @@ def benchmark_various_cv(   n=5, df=None, graph=True, model=None,
     return results
 
 
-def benchmark_various_test_size(   n=5, df=None, graph=True, model=None,
+def benchmark_various_test_size(   n=5, df=None, graph=True, params=None, model=None,
                                    test_size_list=None) : 
 
     if not isinstance(df, pd.DataFrame): 
@@ -471,7 +480,9 @@ def benchmark_various_test_size(   n=5, df=None, graph=True, model=None,
     if not model : 
         model = LogisticRegression
 
-    results = [ pd.Series([run_GSCV(model, dict(), df, test_size=t)[0] for t in test_size_list], 
+    if not params : params = dict() 
+
+    results = [ pd.Series([run_GSCV(model, params, df, test_size=t)[0] for t in test_size_list], 
                         index=test_size_list) for i in range(n)]
     
     results = pd.DataFrame(results, columns=test_size_list)
