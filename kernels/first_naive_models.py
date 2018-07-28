@@ -126,7 +126,7 @@ def model_accuracy_mean(model=None, nb=5, df=None) :
         df = build_df(DATA, TRAIN_FILE)
 
     if not model : 
-        model = LogisticRegression
+        model = basic_model
 
     scores = pd.Series([model(df)[0] for i in range(nb)])
 

@@ -18,7 +18,6 @@ blablabla
 
 # import
 
-
 import itertools as it
 from collections import OrderedDict, Iterable
 
@@ -61,18 +60,20 @@ def beeper(funct) :
 
     return wrapper
 
-
-# @timer
+# @timer
 # @caller
 def run_GSCV(   model=None,     params=None, 
-                df=None,        cv=0, 
-                n_jobs=None,    scoring=None,
-                verbose=None,   test_size=None, 
-                debug_mode=None) : 
+                df=None,        tup=None,
+                cv=0,           n_jobs=None,
+                scoring=None,   test_size=None, 
+                verbose=None,   debug_mode=None) : 
 
     # init default params
     if not model        : model = LogisticRegression()
-    else                : model = model()
+    else : 
+        try             : model = model()
+        except          : pass
+
     is_df               = isinstance(df, pd.DataFrame)
     if not is_df        : df = build_df(DATA, TRAIN_FILE)
     if not params       : params = dict()
@@ -84,13 +85,14 @@ def run_GSCV(   model=None,     params=None,
     if not debug_mode   : debug_mode = False
     grid = None
 
-    # prepare X, y     
-    X,y                 = return_X_y(df)
-    X_tr,X_te,y_tr,y_te = split(X,y, test_size)
+    if not tup : # prepare X, y
+        X,y                 = return_X_y(df)
+        X_tr,X_te,y_tr,y_te = split(X,y, test_size)
+    else :
+        X_tr,X_te,y_tr,y_te = tup
     
-    # init grid
     info(model.__class__)
-    try :       
+    try : # init grid      
         grid        = GridSearchCV( estimator=model, 
                                     param_grid=params,  
                                     cv=cv, 
@@ -102,11 +104,10 @@ def run_GSCV(   model=None,     params=None,
 
     except Exception as e : 
         info("grit init went wrong")
-        print(e)
         if debug_mode : input()
+        raise(e)
 
-    # fit
-    try : 
+    try : # fit
         grid.fit(X_tr, y_tr)
         info("grid fit OK")
         info(grid.best_estimator_)
@@ -115,13 +116,10 @@ def run_GSCV(   model=None,     params=None,
 
     except Exception as e : 
         info("grit fit went wrong")
-        print(e)
         if debug_mode : input()
+        raise(e)
 
-        raise ValueError("pb run_GSCV") 
-
-    # pred
-    try :
+    try : # pred
         y_pred = grid.predict_proba(X_te)
         y_pred = y_pred[:,1]
         info("pred OK")
@@ -129,10 +127,7 @@ def run_GSCV(   model=None,     params=None,
     
     except Exception as e : 
         info("pred went wrong")
-        print(e)
-        if debug_mode : input()
-        info("maybe predict_proba do not exists just predict")
-        
+        info("maybe predict_proba do not exists just predict")       
         try : 
             y_pred = grid.predict(X_te)
             info("second pred Method OK")
@@ -140,26 +135,19 @@ def run_GSCV(   model=None,     params=None,
 
         except Exception as e : 
             info("2nd pred method went wrong")
-            print(e)
             if debug_mode : input()
+            raise(e)
 
-    # compute log_loss as 'lolo'
-    try : 
+    try : # compute log_loss as 'lolo' 
         lolo = log_loss(y_te, y_pred).round(3)
         info("lolo ok")
         info(lolo)
 
     except Exception as e : 
         info("lolo went wrong")
-        print(e)
         if debug_mode : input()
-
-    # return lolo and grid
-    if isinstance(lolo, float) and grid : 
-        return lolo, grid
-    # else raise Error
-    raise ValueError("run_GSCV error")
-
+        raise(e)
+    
 
 #############################################################
 #############################################################

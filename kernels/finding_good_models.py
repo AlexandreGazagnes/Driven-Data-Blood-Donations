@@ -20,19 +20,6 @@ blablabla
 # import
 
 from math import ceil
-import itertools as it
-from collections import OrderedDict
-
-from sklearn.model_selection import GridSearchCV
-
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.linear_model import Perceptron, RidgeClassifier
-from sklearn.neighbors import KNeighborsClassifier
-
-from sklearn.neural_network import MLPClassifier
-from sklearn.svm import LinearSVC, NuSVC
-
 from starting_ML import *
 
 
@@ -183,7 +170,6 @@ def benchmark_various_params(model, params, n=None, df=None, meth=None, save=Tru
         txt +=  "meth :    {}      \n".format(meth)
 
         with open("benchmark_various_params.csv", "w") as f : f.write(txt)
-
 
     columns = list(params.keys())
     columns.append("lolo")

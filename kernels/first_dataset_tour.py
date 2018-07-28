@@ -270,7 +270,7 @@ def study_nas(df) :
 # @timer                                    # UNCOMMENT IF NEEDED
 def study_outliers(df, k=1.5) : 
 
-    fig, _axes = plt.subplots(1, 5, figsize=(13,13))
+    fig, _axes = plt.subplots(1, 4, figsize=(13,13))
     axes = _axes.flatten()
 
     info(fig)
