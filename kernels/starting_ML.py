@@ -512,7 +512,7 @@ def threshold_log_loss(y_pred, y_test=None, x=0.05) :
     y_pred = y_pred.apply(lambda i : x if i<= x else i)
     
     x = round((1-x), 2)
-    y_pred = y_pred .apply(lambda i : x if i>= x else i)
+    y_pred = y_pred.apply(lambda i : x if i>= x else i)
 
     if isinstance(y_test, pd.Series) :  
         info(log_loss(y_pred, y_test))
@@ -550,7 +550,7 @@ def benchmark_various_threshold_lolo(n=20, df=None, graph=True, params=None, mod
     _new_lolo = threshold_log_loss
     init_lolo = log_loss(y_pred, y_test)
     
-    results = [    [log_loss(new_lolo(y_pred,x=x), y_test) for x in threshold_list]
+    results = [    [log_loss(new_lolo(y_pred,x=k), y_test) for k in threshold_list]
                      for _ in range(n)]
     
     results = pd.DataFrame(results, columns=threshold_list)
