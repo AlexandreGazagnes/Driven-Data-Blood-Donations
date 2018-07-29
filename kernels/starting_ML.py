@@ -487,13 +487,74 @@ def benchmark_various_test_size(   n=5, df=None, graph=True, params=None, model=
     return results
 
 
-def combine_param_dict(d) : 
+# def combine_param_dict(d) : 
+#
+#    d = OrderedDict(d)
+#    combinations = it.product(*(d[feat] for feat in d))
+#    combinations = list(combinations)
+#
+#    d = [{i:[j,] for i,j in zip(d.keys(), I)} for I in combinations ]
+#
+#    return d
 
-    d = OrderedDict(d)
-    combinations = it.product(*(d[feat] for feat in d))
-    combinations = list(combinations)
 
-    d = [{i:[j,] for i,j in zip(d.keys(), I)} for I in combinations ]
+def threshold_log_loss(y_pred, y_test=None, x=0.05) : 
+    
+    if not isinstance(y_pred, pd.Series) : 
+        raise ValueError("y_pred has to be a pd.Series")
+        
+    if isinstance(y_test, pd.Series) :  
+        info(log_loss(y_pred, y_test))
+    
+    if not(0.00999 <= x <= 0.4999 ) :
+        raise ValueError("threshold must be 0.01 --> 0.5")
+    
+    y_pred = y_pred.apply(lambda i : x if i<= x else i)
+    
+    x = round((1-x), 2)
+    y_pred = y_pred .apply(lambda i : x if i>= x else i)
 
-    return d
+    if isinstance(y_test, pd.Series) :  
+        info(log_loss(y_pred, y_test))
+    
+    return y_pred
 
+
+def benchmark_various_threshold_lolo(n=20, df=None, graph=True, params=None, model=None) : 
+    
+    if not isinstance(df, pd.DataFrame) : 
+        df = build_df(DATA, TRAIN_FILE)
+
+    if not model : 
+        model = LogisticRegression()
+        
+    if not params : 
+        params = dict()
+        
+    threshold_list = [round(i/100, 2) for i in range(1,50)]
+        
+    X,y = return_X_y(df)
+    X_tr, X_te, y_tr, y_te = split(X, y)
+    y_test = y_te
+    
+    grid = GridSearchCV(model, params, 
+                        cv = 10, 
+                        n_jobs=10,
+                        scoring="accuracy")
+    
+    grid.fit(X_tr, y_tr)
+    
+    y_pred = grid.predict_proba(X_te)
+    y_pred = y_pred[:, 1]
+    
+    _new_lolo = threshold_log_loss
+    init_lolo = log_loss(y_pred, y_test)
+    
+    results = [    [log_loss(new_lolo(y_pred,x=x), y_test) for x in threshold_list]
+                     for _ in range(n)]
+    
+    results = pd.DataFrame(results, columns=threshold_list)
+    
+    return results
+    
+    
