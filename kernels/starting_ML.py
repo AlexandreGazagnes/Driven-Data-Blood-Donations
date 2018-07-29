@@ -508,10 +508,8 @@ def threshold_log_loss(y_pred, y_test=None, x=0.05) :
     
     if not(0.00999 <= x <= 0.4999 ) :
         raise ValueError("threshold must be 0.01 --> 0.5")
-    
-
+ 
     y_pred = pd.Series(y_pred)
-
     y_pred = y_pred.apply(lambda i : x if i<= x else i)
     
     x = round((1-x), 2)
@@ -521,7 +519,6 @@ def threshold_log_loss(y_pred, y_test=None, x=0.05) :
         info(log_loss(y_test, y_pred))
     
     return y_pred
-
 
 
 def threshold_lolo_gain(k, df, model=None, params=None) : 
@@ -544,19 +541,16 @@ def threshold_lolo_gain(k, df, model=None, params=None) :
                         n_jobs=6,
                         scoring="accuracy")
     
-    grid.fit(X_tr, y_tr)
-    
+    grid.fit(X_tr, y_tr)   
     y_pred = grid.predict_proba(X_te)
     y_pred = y_pred[:, 1]
 
     init_lolo = lolo = log_loss(y_test, y_pred)
 
     y_pred = threshold_log_loss(y_pred, k)
-
     new_lolo = log_loss(y_test, y_pred)
 
     return round((init_lolo - new_lolo) / init_lolo,3)
-
 
 
 def benchmark_various_threshold_lolo(   n=20, df=None, graph=True, params=None, 
