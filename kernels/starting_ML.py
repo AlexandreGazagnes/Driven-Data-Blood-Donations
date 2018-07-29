@@ -524,7 +524,7 @@ def threshold_log_loss(y_pred, y_test=None, x=0.05) :
 
 
 
-def threshold_lolo_gain(k, df, model=model, params=params ) : 
+def threshold_lolo_gain(k, df, model=None, params=None) : 
     
     if not isinstance(df, pd.DataFrame) : 
         df = build_df(DATA, TRAIN_FILE)
