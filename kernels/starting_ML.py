@@ -487,17 +487,6 @@ def benchmark_various_test_size(   n=5, df=None, graph=True, params=None, model=
     return results
 
 
-# def combine_param_dict(d) : 
-#
-#    d = OrderedDict(d)
-#    combinations = it.product(*(d[feat] for feat in d))
-#    combinations = list(combinations)
-#
-#    d = [{i:[j,] for i,j in zip(d.keys(), I)} for I in combinations ]
-#
-#    return d
-
-
 def threshold_log_loss(y_pred, y_test=None, x=0.05) : 
     
     if not isinstance(y_pred, Iterable) : 
