@@ -3,26 +3,26 @@
 
 
 
-#####################################################################################################
-#####################################################################################################
+################################################################################
+################################################################################
 
 # DRIVEN DATA - PREDICT BLOOD DONATIONS
 
-#####################################################################################################
-#####################################################################################################
+################################################################################
+################################################################################
 
 
 # from IPython.display import Image
 # Image("../intro.png")
 
 
-#####################################################################################################
-#####################################################################################################
+################################################################################
+################################################################################
 
 # 00-first_dataset_tour.py
 
-#####################################################################################################
-#####################################################################################################
+################################################################################
+################################################################################
 
 
 # Find here a first study of the dataset, in which we seek to understand and
@@ -32,7 +32,8 @@
 # clenaning and feature engineering.
 
 # At first we will just study the corelations, the links, the quality and the
-# meaning of our dataset.External research and more general considerations may be included in this work
+# meaning of our dataset.External research and more general considerations may 
+# be included in this work
 
 
 # import
@@ -493,20 +494,22 @@ df = build_df(DATA, TRAIN_FILE)
 
 # Conclusion
 
-# Through this first study, we can see several things. Our dataset is of very good quality, few outliers, 
+# Through this first study, we can see several things. Our dataset is of very
+#  good quality, few outliers, 
 # no missing values, a number of features reduced and little corelation.
 
-# Its simplicity will be an obvious limit when it comes to making feature engineering, benchmarking 
+# Its simplicity will be an obvious limit when it comes to making feature 
+# engineering, benchmarking 
 # models and looking for marginal improvements.
 
 
-#####################################################################################################
-#####################################################################################################
+################################################################################
+################################################################################
 
 # 01-first_naive_models.py
 
-#####################################################################################################
-#####################################################################################################
+################################################################################
+################################################################################
 
 
 # In this second part, we will implement our first logistic regression model.
@@ -576,7 +579,8 @@ def split(X,y, size=0.33) :
     
 
 
-# 'overkill' Build from scratch a naive/dummy model which make prediction regarding global target probabilities
+# 'overkill' Build from scratch a naive/dummy model which make prediction 
+# regarding global target probabilities
 
 def naive_model(df=None, param=None) :
 
@@ -603,7 +607,8 @@ def naive_model(df=None, param=None) :
 # print(lolo)
 
 
-# Rather than coding a dummy model from scratch, use sklearn DummyClassifier (same job)
+# Rather than coding a dummy model from scratch, use sklearn DummyClassifier 
+# (same job)
 
 def dummy_model(df=None, param=None) : 
 
@@ -629,9 +634,10 @@ def dummy_model(df=None, param=None) :
 # print(lolo)
 
 
-# Just for fun trying to make predictions with a very basic model (no meta params, no features engineering)
-# this one will be our model prediction base
-# it is suposed to be better that our DummyClassifier. If not there is a major issue...
+# Just for fun trying to make predictions with a very basic model (no meta 
+# params, no features engineering) this one will be our model prediction base
+# it is suposed to be better that our DummyClassifier. If not there is a major
+# issue...
 
 def basic_model(df=None, param=None) : 
 
@@ -732,7 +738,8 @@ def first_approch_of_feat_eng(model=None, n=20, df=None) :
 
 
 # without getting mad about results, we can see that it is not very easy to use
-# maybe it could be much better if we only look at gain between normal and ehanced results
+# maybe it could be much better if we only look at gain between normal and 
+# ehanced results
 
 def outliers_lolo_gain(k, df, model=None, params=None) : 
     
@@ -760,7 +767,8 @@ def outliers_lolo_gain(k, df, model=None, params=None) :
     return round((init_lolo - new_lolo) / init_lolo,3)
 
 
-# and here we have our benchmark function which return log loss gain for each k value
+# and here we have our benchmark function which return log loss gain for 
+# each k value
 
 def benchmark_various_outliers( n=20, df=None, params=None, 
                                         model=None, outliers_list=None) : 
@@ -777,7 +785,7 @@ def benchmark_various_outliers( n=20, df=None, params=None,
     if not outliers_list : 
         outliers_list = np.arange(1,5.01,0.1).round(1)
 
-    results = [ [outliers_lolo_gain(k, df, model, params) for k in outliers_list]
+    results = [[outliers_lolo_gain(k, df, model, params) for k in outliers_list]
                      for _ in range(n)]
     
     results = pd.DataFrame(results, columns=outliers_list)
@@ -824,12 +832,13 @@ def print_gobal_stats(results) :
 # results.describe().T.loc[:,["mean", "50%"]].plot()
 
 
-# can we say that outliers detection and cleaning has a significant impact regarding our final score? 
+# can we say that outliers detection and cleaning has a significant impact 
+# regarding our final score? 
 # the answer is of course : "No"
 # but we can try with a k=1.3 outlier... 
 
 n       = 100
-results = pd.Series([outliers_lolo_gain(1.3, df) for i in range(n)])
+results = pd.Series([outliers_lolo_gain(1.4, df) for i in range(n)])
 
 
 # results.describe().T
@@ -838,7 +847,9 @@ results = pd.Series([outliers_lolo_gain(1.3, df) for i in range(n)])
 def enhanced_describe(results): 
     
     _results = results.describe()
-    _min, Q1, _med, Q3, _max = _results["min"], _results["25%"], _results["50%"], _results["75%"], _results["max"]
+    _min, Q1, _med, Q3, _max = (    _results["min"], _results["25%"], 
+                                    _results["50%"], _results["75%"], 
+                                    _results["max"]     )
     _mean = _results["mean"]
     _count = _results["count"]
     _std = _results["std"]
@@ -864,10 +875,12 @@ def enhanced_describe(results):
     if round((_max - _med) - (_med -_min),3) >0 : conf += 1
     if round((_max - _med) - (_med -_min),3) <0 : conf -= 1
         
-    if ( (round((_max - _med) - (_med -_min),3) >0) and (round((Q3 - _med) - (_med -Q1),3) >0)) :
-        conf += 1
-    if ( (round((_max - _med) - (_med -_min),3) <0) and (round((Q3 - _med) - (_med -Q1),3) <0)) :
-        conf -= 1                                         
+    if ( (round((_max - _med) - (_med -_min),3) >0) 
+        and (round((Q3 - _med) - (_med -Q1),3) >0)  ) :
+            conf += 1
+    if ( (round((_max - _med) - (_med -_min),3) <0) 
+       and (round((Q3 - _med) - (_med -Q1),3) <0)  ) :
+            conf -= 1                                         
 
     if _min > 0 : count += 2
     if _max < 0 : count -= 2
@@ -880,10 +893,12 @@ def enhanced_describe(results):
             
     sol = _count/100
     
-    output = pd.Series([    _count, _med, _mean, _std, _min, _max, Q1, Q3, Q3-Q1, Q1_Q3_vs_med,
+    output = pd.Series([    _count, _med, _mean, _std, _min, _max, Q1, 
+                            Q3, Q3-Q1, Q1_Q3_vs_med,
                             ma_mi_vs_med, sol, conf, strength], 
-                            index = [  "count", "med", "mean", "std", "min", "max", "Q1", "Q3", 
-                                      "IQ", "IQ vs med", "extr vs med", "sol", "conf", "strength"])
+                            index = [ "count", "med", "mean", "std", "min", 
+                                      "max", "Q1", "Q3", "IQ", "IQ vs med", 
+                                      "extr vs med", "sol", "conf", "strength"])
     
     output = output.round(3)
     output = pd.DataFrame({"Enhanced describe" : output}, index=output.index)
@@ -904,24 +919,28 @@ def enhanced_describe(results):
 
 # conclusion
 
-# We could see through this first study that we have a dataset quite simple, allowing our first approach 
+# We could see through this first study that we have a dataset quite simple, 
+# allowing our first approach 
 # to have pretty good results.
 
-# Our base model offers a performance of 0.5 and the impact of the ouliers on the model's performance 
+# Our base model offers a performance of 0.5 and the impact of the ouliers 
+# on the model's performance 
 # seems at first glance quite low.
 
-# Having a fairly simple dataset, the possibilities for improving the models will not be that simple due 
-# to the small number of variables and the small size of the dataset : the possibilities offered by 
+# Having a fairly simple dataset, the possibilities for improving the models 
+# will not be that simple due 
+# to the small number of variables and the small size of the dataset : the 
+# possibilities offered by 
 # the feature engineering are indeed quite low.
 
 
-#####################################################################################################
-#####################################################################################################
+################################################################################
+################################################################################
 
 # 02-starting_ML.py
 
-#####################################################################################################
-#####################################################################################################
+################################################################################
+################################################################################
 
 
 # In this third part we will finally start to make real machine learning. We will first code a high-level
@@ -1125,7 +1144,7 @@ def benchmark_various_models(  n=5, df=None, graph=True, params=None,
 ####
 
 
-results = benchmark_various_models(10)
+# results = benchmark_various_models(10)
 
 
 # print out raw values
@@ -1302,40 +1321,31 @@ def benchmark_various_transform(   n=10, df=None, graph=True, params=None, model
 ####
 
 
-results = benchmark_various_transform(10)
+# results = benchmark_various_transform(30)
 
 
 # raw results 
-
-results.iloc[:10, :]
-
+# results.iloc[:10, :]
 
 # gobal results
-
-print_gobal_stats(results)
-
-
+# print_gobal_stats(results)
+    
 # graph  
-
-results.boxplot()
-plt.xlabel("transformations of df")
-plt.ylabel("log_loss score")
-plt.title("benchmark various df transforms, without feat eng or meta params")
-plt.show()
-
+# results.boxplot()
+# plt.xlabel("transformations of df")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various df transforms, without feat eng or meta params")
+# plt.show()
 
 # fancy results
-
-_results = results.describe().T.sort_values(by="50%", ascending=False)
-_results
-
+# _results = results.describe().T.sort_values(by="50%", ascending=False)
+# _results
 
 # graph 
-
-results.T.iloc[:,:10].plot()
-plt.xlabel("transformations of df")
-plt.ylabel("log_loss score")
-plt.title("benchmark various df transforms, without feat eng or meta params")
+# results.T.iloc[:,:10].plot()
+# plt.xlabel("transformations of df")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various df transforms, without feat eng or meta params")
 
 
 def scoring_lolo_gain(scoring, df, model=None, params=None) : 
@@ -1390,41 +1400,32 @@ def benchmark_various_scoring(  n=5, df=None, graph=True, params=None, model=Non
 
 ####
 
-results = benchmark_various_scoring(10)
+# results = benchmark_various_scoring(10)
 
 
 # raw results
-
-results.iloc[:10, :]
-
+# results.iloc[:10, :]
 
 # gobal results
-
-print_gobal_stats(results)
-
+# print_gobal_stats(results)
 
 # graph 
-
-results.boxplot()
-plt.xlabel("scoring methods for grid search")
-plt.ylabel("log_loss score")
-plt.title("benchmark various scoring, without feat eng or meta params")
-plt.show()
-
+# results.boxplot()
+# plt.xlabel("scoring methods for grid search")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various scoring, without feat eng or meta params")
+# plt.show()
 
 # fancy results
-
-_results = results.describe().T.sort_values(by="50%", ascending=False)
-_results
-
+# _results = results.describe().T.sort_values(by="50%", ascending=False)
+# _results
 
 # graph 
-
-results.T.iloc[:, :10].plot()
-plt.xlabel("scoring methods for grid search")
-plt.ylabel("log_loss score")
-plt.title("benchmark various scoring, without feat eng or meta params")
-plt.show()
+# results.T.iloc[:, :10].plot()
+# plt.xlabel("scoring methods for grid search")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various scoring, without feat eng or meta params")
+# plt.show()
 
 
 def cv_lolo_gain(cv, df, model=None, params=None) : 
@@ -1481,41 +1482,32 @@ def benchmark_various_cv(   n=5, df=None, graph=True, params=None, model=None,
 
 ####
 
-results = benchmark_various_cv(10)
+# results = benchmark_various_cv(10)
 
 
 # raw results
-
-results.head()
-
+# results.head()
 
 # gobal results
-
-print_gobal_stats(results)
-
+# print_gobal_stats(results)
 
 # graph
-
-results.boxplot()
-plt.xlabel(" nb of kfolds for grid search")
-plt.ylabel("log_loss score")
-plt.title("benchmark various nb of kfolds, without feat eng or meta params")
-plt.show()
-
+# results.boxplot()
+# plt.xlabel(" nb of kfolds for grid search")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various nb of kfolds, without feat eng or meta params")
+# plt.show()
 
 # fancy results
-
-_results = results.describe().T.sort_values(by="50%", ascending=False)
-_results
-
+# _results = results.describe().T.sort_values(by="50%", ascending=False)
+# _results
 
 # graph 
-
-results.T.iloc[:, :10].plot()
-plt.xlabel("nb of kfolds methods for grid search")
-plt.ylabel("log_loss score")
-plt.title("benchmark various nb of kfolds, without feat eng or meta params")
-plt.show()
+# results.T.iloc[:, :10].plot()
+# plt.xlabel("nb of kfolds methods for grid search")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various nb of kfolds, without feat eng or meta params")
+# plt.show()
 
 
 # without getting mad about results, we can see that it is not very easy to use
@@ -1549,8 +1541,8 @@ def test_train_lolo_gain(test_size, df, model=None, params=None) :
 
 # 'overkill' idem for test/train ratio
 
-def benchmark_various_test_size(   n=5, df=None, graph=True, params=None, model=None,
-                                   test_size_list=None) : 
+def benchmark_various_test_size(    n=5, df=None, graph=True, params=None, 
+                                    model=None, test_size_list=None) : 
 
     if not isinstance(df, pd.DataFrame): 
         df = build_df(DATA, TRAIN_FILE)
@@ -1563,7 +1555,8 @@ def benchmark_various_test_size(   n=5, df=None, graph=True, params=None, model=
 
     if not params : params = dict() 
 
-    results = [ pd.Series([test_train_lolo_gain(t, df, model, params) for t in test_size_list], 
+    results = [ pd.Series([test_train_lolo_gain(t, df, model, params) 
+                        for t in test_size_list], 
                         index=test_size_list) for i in range(n)]
     
     results = pd.DataFrame(results, columns=test_size_list)
@@ -1573,41 +1566,32 @@ def benchmark_various_test_size(   n=5, df=None, graph=True, params=None, model=
 
 #### 
 
-results = benchmark_various_test_size(10)
+# results = benchmark_various_test_size(10)
 
 
 # raw results
-
-results.iloc[:10, :]
-
+# results.iloc[:10, :]
 
 # gobal results
-
-print_gobal_stats(results)
-
+# print_gobal_stats(results)
 
 # graph 
-
-results.boxplot()
-plt.xlabel("nb of test_size for test/train split")
-plt.ylabel("log_loss score")
-plt.title("benchmark various test_size for test/train split, without feat eng or meta params")
-plt.show()
-
+# results.boxplot()
+# plt.xlabel("nb of test_size for test/train split")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various test_size for test/train split, without feat eng or meta params")
+# plt.show()
 
 # fancy results
-
-_results = results.describe().T.sort_values(by="50%", ascending=False).iloc[:10, :]
-_results
-
+# _results = results.describe().T.sort_values(by="50%", ascending=False).iloc[:10, :]
+# _results
 
 # graph 
-
-results.T.iloc[:, :10].plot()
-plt.xlabel("nb of test_size for test/train split")
-plt.ylabel("log_loss score")
-plt.title("benchmark various test_size for test/train split, without feat eng or meta params")
-plt.show()
+# results.T.iloc[:, :10].plot()
+# plt.xlabel("nb of test_size for test/train split")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various test_size for test/train split, without feat eng or meta params")
+# plt.show()
 
 
 # we now will try to ehance our output with thresholding our predictions 
@@ -1665,7 +1649,7 @@ def clipping_lolo_gain(k, df, model=None, params=None) :
 
     init_lolo = lolo = log_loss(y_test, y_pred)
 
-    y_pred = clipping_log_loss(y_pred, k)
+    y_pred = clipping_log_loss(y_pred, x=k)
     new_lolo = log_loss(y_test, y_pred)
 
     return round((init_lolo - new_lolo) / init_lolo,3)
@@ -1687,7 +1671,7 @@ def benchmark_various_lolo_clipping(   n=20, df=None, graph=True, params=None,
         params = dict()
 
     if not threshold_list : 
-        threshold_list = [round(i/100, 2) for i in range(1,50)]
+        threshold_list = np.arange(0.01,0.4, 0.01).round(2)
         # threshold_list = [round(i/1000, 3) for i in range(10,101)]
         # threshold_list = [round(i/1000, 3) for i in range(10,500, 5)]
     results = [ [clipping_lolo_gain(k, df, model, params) for k in threshold_list]
@@ -1700,34 +1684,24 @@ def benchmark_various_lolo_clipping(   n=20, df=None, graph=True, params=None,
 
 ####
 
-results = benchmark_various_lolo_clipping(10)
+# results = benchmark_various_lolo_clipping(10)
 
 
 # raw results
-
-results.iloc[:10, :]
-
+# results.iloc[:10, :]
 
 # gobal results
-
-print_gobal_stats(results)
-
+# print_gobal_stats(results)
 
 # graph 
-
-results.boxplot()
-
+# results.boxplot()
 
 # fancy results 
-
-_results = results.describe().T.sort_values(by="50%", axis=0, ascending=False).iloc[:10, :]
-_results
-
+# _results = results.describe().T.sort_values(by="50%", axis=0, ascending=False).iloc[:10, :]
+# _results
 
 # graph
-
-results.iloc[:10, :].T.plot()
-
+# results.iloc[:10, :].T.plot()
 
 # we now will study the impact of softmax method on our output predictions
 # famous soft max method is the exponetial soft max
@@ -1737,7 +1711,6 @@ def exp_softmax(x):
 
     e_x = np.exp(x - np.max(x))
     return e_x / e_x.sum()
-
 
 
 # we will compute our method, which is a linear soft max method
@@ -1788,8 +1761,6 @@ def softmax_lolo_gain(k, p, t, df, model=None, params=None) :
     return round((init_lolo - new_lolo) / init_lolo,3)
 
 
-
-
 def benchmark_various_softmax_lolo(   n=20, df=None, graph=True, params=None, 
                                         model=None, softmax_list=None) : 
     
@@ -1822,23 +1793,18 @@ def benchmark_various_softmax_lolo(   n=20, df=None, graph=True, params=None,
 ####
 
 
-results = benchmark_various_softmax_lolo(10)
+# results = benchmark_various_softmax_lolo(10)
 
 
 # raw results
-
-results.iloc[:10, :]
-
+# results.iloc[:10, :]
 
 # gobal results
-
-print_gobal_stats(results)
-
+# print_gobal_stats(results)
 
 # fancy results 
-
-_results = results.describe().T.sort_values(by="50%", axis=0, ascending=False).iloc[:10, :]
-_results
+# _results = results.describe().T.sort_values(by="50%", axis=0, ascending=False).iloc[:10, :]
+# _results
 
 
 # compute lolo gain for one k threshold
@@ -1877,8 +1843,10 @@ def softmax_clip_lolo_gain(x, k, p, t, df, model=None, params=None) :
 
 
 
-def benchmark_various_softmax_clipping_lolo(   n=20, df=None, graph=True, params=None, 
-                                        model=None, softmax_clip_list=None) : 
+def benchmark_various_softmax_clipping_lolo(    n=20, df=None, graph=True, 
+                                                params=None, 
+                                                model=None, 
+                                                softmax_clip_list=None) : 
     
     if not isinstance(df, pd.DataFrame) : 
         df = build_df(DATA, TRAIN_FILE)
@@ -1900,7 +1868,8 @@ def benchmark_various_softmax_clipping_lolo(   n=20, df=None, graph=True, params
         if len(softmax_clip_list) >= 500 : 
             raise ValueError(" to long to compute")
     
-    results = [ [softmax_clip_lolo_gain(x, k, p, t, df, model, params) for (x, k,p) in softmax_clip_list]
+    results = [ [softmax_clip_lolo_gain(x, k, p, t, df, model, params) for
+                     (x, k,p) in softmax_clip_list]
                      for _ in range(n)]
     
     results = pd.DataFrame(results, columns=softmax_clip_list)
@@ -1912,16 +1881,6 @@ def benchmark_various_softmax_clipping_lolo(   n=20, df=None, graph=True, params
 
 
 results = benchmark_various_softmax_clipping_lolo(5)
-
-
-x = np.arange(0.01, 0.31, 0.03).round(2)
-k = np.arange(1,5.1, 0.5).round(2)
-p = np.arange(0.1, 0.51, 0.1).round(2)
-softmax_clip_list = [ (a,b,c) for a in x for b in k for c in p]
-len(softmax_clip_list)
-
-
-
     
 
 

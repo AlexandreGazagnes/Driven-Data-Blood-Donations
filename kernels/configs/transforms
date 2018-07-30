@@ -1,0 +1,45 @@
+
+In [63]: results.describe().T.sort_values(by="50%", axis=0, ascending=False)
+Out[63]: 
+               count      mean       std    min      25%     50%      75%  \
+nothing         90.0  0.014856  0.098843 -0.271 -0.04000  0.0165  0.07425   
+minmax+norm     90.0 -0.005322  0.106808 -0.260 -0.07675  0.0085  0.06400   
+standscale      90.0 -0.008000  0.095292 -0.343 -0.06075 -0.0010  0.05500   
+minmax+stdsca   90.0 -0.008944  0.108819 -0.398 -0.07550 -0.0090  0.06775   
+normalize       90.0 -0.025178  0.101744 -0.370 -0.08250 -0.0210  0.04000   
+minmax+norm.1   90.0 -0.033789  0.089987 -0.251 -0.08225 -0.0340  0.02550   
+stdsca+minmax   90.0 -0.051667  0.096245 -0.276 -0.11975 -0.0385  0.02100   
+minmax          90.0 -0.035489  0.087910 -0.266 -0.09025 -0.0425  0.03125   
+
+                 max  
+nothing        0.227  
+minmax+norm    0.221  
+standscale     0.199  
+minmax+stdsca  0.278  
+normalize      0.180  
+minmax+norm.1  0.181  
+stdsca+minmax  0.167  
+minmax         0.172  
+
+In [64]: results.describe().T.sort_values(by="mean", axis=0, ascending=False)
+Out[64]: 
+               count      mean       std    min      25%     50%      75%  \
+nothing         90.0  0.014856  0.098843 -0.271 -0.04000  0.0165  0.07425   
+minmax+norm     90.0 -0.005322  0.106808 -0.260 -0.07675  0.0085  0.06400   
+standscale      90.0 -0.008000  0.095292 -0.343 -0.06075 -0.0010  0.05500   
+minmax+stdsca   90.0 -0.008944  0.108819 -0.398 -0.07550 -0.0090  0.06775   
+normalize       90.0 -0.025178  0.101744 -0.370 -0.08250 -0.0210  0.04000   
+minmax+norm.1   90.0 -0.033789  0.089987 -0.251 -0.08225 -0.0340  0.02550   
+minmax          90.0 -0.035489  0.087910 -0.266 -0.09025 -0.0425  0.03125   
+stdsca+minmax   90.0 -0.051667  0.096245 -0.276 -0.11975 -0.0385  0.02100   
+
+                 max  
+nothing        0.227  
+minmax+norm    0.221  
+standscale     0.199  
+minmax+stdsca  0.278  
+normalize      0.180  
+minmax+norm.1  0.181  
+minmax         0.172  
+stdsca+minmax  0.167  
+
