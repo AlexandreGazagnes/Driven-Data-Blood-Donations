@@ -1,11 +1,5 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
 #!/usr/bin/env python3
-
+#-*- coding: utf8 -*-
 
 
 
@@ -18,11 +12,8 @@
 #####################################################################################################
 
 
-from IPython.display import Image
-Image("../intro.png")
-
-
-# In[2]:
+# from IPython.display import Image
+# Image("../intro.png")
 
 
 #####################################################################################################
@@ -44,9 +35,6 @@ Image("../intro.png")
 # meaning of our dataset.External research and more general considerations may be included in this work
 
 
-# In[3]:
-
-
 # import
 
 import os, sys, logging, random, time
@@ -58,33 +46,23 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 
 
-# In[4]:
-
-
 # logging and warnings
 
-logger = logging.getLogger()
-logger.setLevel(logging.CRITICAL)
+# logger = logging.getLogger()
+# logger.setLevel(logging.CRITICAL)
 
-# l = logging.WARNING
-# logging.basicConfig(level=l, format="%(levelname)s : %(message)s")
-
+l = logging.INFO
+logging.basicConfig(level=l, format="%(levelname)s : %(message)s")
 info = logging.info
 
-import warnings
-warnings.filterwarnings('ignore')
-
-
-# In[5]:
+# import warnings
+# warnings.filterwarnings('ignore')
 
 
 # graph
-
-get_ipython().magic('matplotlib inline')
+%matplotlib
+# get_ipython().magic('matplotlib inline')
 sns.set()
-
-
-# In[6]:
 
 
 # consts
@@ -94,9 +72,6 @@ DATA        = "data"
 SUBMISSIONS = "submissions"
 TRAIN_FILE  = "training_data.csv"
 TEST_FILE   = "test_data.csv"
-
-
-# In[7]:
 
 
 # 'overkill' First we define two decorators. it will be useful to control 
@@ -142,15 +117,12 @@ def timer(funct) :
 ####
 
 
-@caller
-@timer
-def _print() : 
-    print("this is a test")
+# @caller
+# @timer
+# def _print() : 
+#     print("this is a test")
     
-_print()
-
-
-# In[8]:
+# _print()
 
 
 # Our first function : just find the data folder in the repo 
@@ -185,11 +157,8 @@ def finding_master_path(folder, project=PROJECT) :
 ####
 
 
-path = finding_master_path(DATA)
-path
-
-
-# In[9]:
+# path = finding_master_path(DATA)
+# path
 
 
 # Control that our datafiles are Ok
@@ -202,11 +171,8 @@ def return_datasets(path) :
 ####
 
 
-datasets = return_datasets(path)
-datasets
-
-
-# In[10]:
+# datasets = return_datasets(path)
+# datasets
 
 
 # Init our dataframe 
@@ -230,11 +196,8 @@ def init_df(path, file) :
 ####
 
 
-df = init_df(path, TRAIN_FILE)
-df.head()
-
-
-# In[11]:
+# df = init_df(path, TRAIN_FILE)
+# df.head()
 
 
 # Let's have a first raw tour about this df
@@ -269,10 +232,7 @@ def print_df(df) :
 ####
 
 
-print_df(df)
-
-
-# In[12]:
+# print_df(df)
 
 
 # 'overkill' Let's retype our values to reduce mem usage 
@@ -305,12 +265,9 @@ def re_dtype(df) :
 ####
 
 
-df = re_dtype(df)
-df.head()
-df.dtypes
-
-
-# In[13]:
+# df = re_dtype(df)
+# df.head()
+# df.dtypes
 
 
 # Let's have a second tour of our dataset but with graphical tools
@@ -346,10 +303,7 @@ def graph_each_feature(df)  :
 ####
 
 
-graph_each_feature(df)
-
-
-# In[14]:
+# graph_each_feature(df)
 
 
 # Idem for target
@@ -366,10 +320,7 @@ def graph_target(df) :
 ####
 
 
-graph_target(df)
-
-
-# In[15]:
+# graph_target(df)
 
 
 # Looking in depth : finding correlation between features
@@ -386,10 +337,7 @@ def graph_corr_matrix(df) :
 ####
 
 
-graph_corr_matrix(df)
-
-
-# In[16]:
+# graph_corr_matrix(df)
 
 
 # So without doupt we can drop perfectly correlated features
@@ -404,11 +352,8 @@ def drop_corr_features(df) :
 ####
 
 
-df = drop_corr_features(df)
-df.head()
-
-
-# In[17]:
+# df = drop_corr_features(df)
+# df.head()
 
 
 # What about nas?
@@ -424,10 +369,7 @@ def study_nas(df) :
 ####
 
 
-study_nas(df)
-
-
-# In[18]:
+# study_nas(df)
 
 
 # Ok perfect, too easy maybe...
@@ -455,10 +397,7 @@ def study_outliers(df, k=1.5) :
 ####
 
 
-study_outliers(df)
-
-
-# In[19]:
+# study_outliers(df)
 
 
 # After all ! we have a first real data scientist job to do : cleaning! 
@@ -489,13 +428,9 @@ def delete_outliers(df, k) :
 ####
 
 
-print(df.shape)
-
-_df = delete_outliers(df, 1.5)
-print(_df.shape)
-
-
-# In[20]:
+# print(df.shape)
+# _df = delete_outliers(df, 1.5)
+# print(_df.shape)
 
 
 # Let's resume all of this in a global function
@@ -535,9 +470,6 @@ def first_tour(folder=None, filename=None, project=PROJECT) :
         study_outliers(df, i)               # UNCOMMENT IF NEEDED
 
 
-# In[21]:
-
-
 # Finally we define a function to auto build our data frame
 
 @caller
@@ -556,10 +488,7 @@ def build_df(folder=None, filename=None, project=PROJECT) :
 
 
 df = build_df(DATA, TRAIN_FILE)
-df.head()
-
-
-# In[22]:
+# df.head()
 
 
 # Conclusion
@@ -569,9 +498,6 @@ df.head()
 
 # Its simplicity will be an obvious limit when it comes to making feature engineering, benchmarking 
 # models and looking for marginal improvements.
-
-
-# In[23]:
 
 
 #####################################################################################################
@@ -593,9 +519,6 @@ df.head()
 # obtained
 
 
-# In[24]:
-
-
 # import
 
 from sklearn.model_selection import train_test_split
@@ -604,20 +527,15 @@ from sklearn.dummy import DummyClassifier
 from sklearn.linear_model import LogisticRegression
 
 from sklearn.metrics import accuracy_score, log_loss
+from sklearn.model_selection import GridSearchCV
 
 # from first_dataset_tour import *
-
-
-# In[25]:
 
 
 # consts 
 
 # COLUMNS = ["naive", "dummy", "basic", "features eng."]
 # MODELS = [naive_model, dummy_model, basic_model]
-
-
-# In[26]:
 
 
 # Split our features from our target
@@ -638,12 +556,9 @@ def return_X_y(df) :
 ####
 
 
-X,y = return_X_y(df)
-print(X.columns)
-print(y.name)
-
-
-# In[27]:
+# X,y = return_X_y(df)
+# print(X.columns)
+# print(y.name)
 
 
 # Split test and train df/target
@@ -656,12 +571,9 @@ def split(X,y, size=0.33) :
 ####
 
 
-X_tr, X_te, y_tr, y_te = tup = split(X,y)
-for i in tup : print(i.shape)
+# X_tr, X_te, y_tr, y_te = tup = split(X,y)
+# for i in tup : print(i.shape)
     
-
-
-# In[28]:
 
 
 # 'overkill' Build from scratch a naive/dummy model which make prediction regarding global target probabilities
@@ -687,11 +599,8 @@ def naive_model(df=None, param=None) :
 ####
 
 
-lolo, mod = naive_model(df)
-print(lolo)
-
-
-# In[29]:
+# lolo, mod = naive_model(df)
+# print(lolo)
 
 
 # Rather than coding a dummy model from scratch, use sklearn DummyClassifier (same job)
@@ -716,11 +625,8 @@ def dummy_model(df=None, param=None) :
 ####
 
 
-lolo, mod = dummy_model(df)
-print(lolo)
-
-
-# In[30]:
+# lolo, mod = dummy_model(df)
+# print(lolo)
 
 
 # Just for fun trying to make predictions with a very basic model (no meta params, no features engineering)
@@ -749,11 +655,8 @@ def basic_model(df=None, param=None) :
 ####
 
 
-lolo, mod = basic_model(df)
-print(lolo)
-
-
-# In[31]:
+# lolo, mod = basic_model(df)
+# print(lolo)
 
 
 @caller
@@ -783,10 +686,7 @@ def model_accuracy_mean(model=None, n=50, df=None) :
 ####
 
 
-model_accuracy_mean(n=10)
-
-
-# In[32]:
+# model_accuracy_mean(n=10)
 
 
 
@@ -818,34 +718,17 @@ def first_approch_of_feat_eng(model=None, n=20, df=None) :
     
 ####
 
-results = first_approch_of_feat_eng(n=10)
-
-
-# In[33]:
-
+# results = first_approch_of_feat_eng(n=10)
 
 # raw data
-
-results.iloc[:10, :]
-
-
-# In[34]:
+# results.iloc[:10, :]
 
 
 # fancy results
-
-results.describe().T.sort_values(by="50%", axis=0).iloc[:10, :]
-
-
-# In[35]:
-
+# results.describe().T.sort_values(by="50%", axis=0).iloc[:10, :]
 
 # graph 
-
-results.iloc[:10, :].T.plot()
-
-
-# In[36]:
+# results.iloc[:10, :].T.plot()
 
 
 # without getting mad about results, we can see that it is not very easy to use
@@ -860,7 +743,7 @@ def outliers_lolo_gain(k, df, model=None, params=None) :
         
     if not params : params = dict()
 
-    grid = GridSearchCV(model, params, cv = 5, n_jobs=3, scoring="accuracy")
+    grid = GridSearchCV(model, params, cv=3, n_jobs=6, scoring="accuracy")
         
     # init lolo
     X_tr, X_te, y_tr, y_te = split(*return_X_y(df))  
@@ -877,12 +760,7 @@ def outliers_lolo_gain(k, df, model=None, params=None) :
     return round((init_lolo - new_lolo) / init_lolo,3)
 
 
-# In[ ]:
-
-
 # and here we have our benchmark function which return log loss gain for each k value
-
-from sklearn.model_selection import GridSearchCV
 
 def benchmark_various_outliers( n=20, df=None, params=None, 
                                         model=None, outliers_list=None) : 
@@ -897,7 +775,7 @@ def benchmark_various_outliers( n=20, df=None, params=None,
         params = dict()
 
     if not outliers_list : 
-        outliers_list = np.arange(0.1,5,0.1).round(1)
+        outliers_list = np.arange(1,5.01,0.1).round(1)
 
     results = [ [outliers_lolo_gain(k, df, model, params) for k in outliers_list]
                      for _ in range(n)]
@@ -909,19 +787,11 @@ def benchmark_various_outliers( n=20, df=None, params=None,
 
 ####
 
-results = benchmark_various_outliers(10)
-
-
-# In[ ]:
-
+# results = benchmark_various_outliers(10)
 
 # raw results 
+# results.iloc[:10, :]
 
-results.iloc[:10, :]
-
-
-
-# In[ ]:
 
 
 # how to have global stats ?
@@ -938,43 +808,20 @@ def print_gobal_stats(results) :
     
 ####
 
-print_gobal_stats(results)
 
-
-# In[ ]:
-
+# print_gobal_stats(results)
 
 # graph 
-
-results.boxplot()
-
-
-# In[ ]:
-
+# results.boxplot()
 
 # fancy results
-
-results.describe().T.sort_values(by="50%", ascending=False).iloc[:10, :]
-
-
-# In[ ]:
-
+# results.describe().T.sort_values(by="50%", ascending=False).iloc[:10, :]
 
 # graph 
-
-results.iloc[:10, :].T.plot()
-
-
-# In[ ]:
-
+# results.iloc[:10, :].T.plot()
 
 # last graph 
-
-results.describe().T.loc[:,["mean", "50%"]].plot()
-
-
-
-# In[ ]:
+# results.describe().T.loc[:,["mean", "50%"]].plot()
 
 
 # can we say that outliers detection and cleaning has a significant impact regarding our final score? 
@@ -985,13 +832,7 @@ n       = 100
 results = pd.Series([outliers_lolo_gain(1.3, df) for i in range(n)])
 
 
-# In[ ]:
-
-
-results.describe().T
-
-
-# In[ ]:
+# results.describe().T
 
 
 def enhanced_describe(results): 
@@ -1058,10 +899,7 @@ def enhanced_describe(results):
 ####
 
 
-enhanced_describe(results)
-
-
-# In[ ]:
+# enhanced_describe(results)
 
 
 # conclusion
@@ -1075,9 +913,6 @@ enhanced_describe(results)
 # Having a fairly simple dataset, the possibilities for improving the models will not be that simple due 
 # to the small number of variables and the small size of the dataset : the possibilities offered by 
 # the feature engineering are indeed quite low.
-
-
-# In[ ]:
 
 
 #####################################################################################################
@@ -1098,9 +933,6 @@ enhanced_describe(results)
 
 # This work is clearly laborious, but its successful execution depends on our ability to really push 
 # our model at best.
-
-
-# In[ ]:
 
 
 # import
@@ -1124,9 +956,6 @@ from sklearn.svm import LinearSVC, NuSVC
 # from first_naive_models import *
 
 
-# In[ ]:
-
-
 # let's define a new decorator that will allow us to beeper during long tests of algo sessions
 
 def beeper(funct) : 
@@ -1144,9 +973,6 @@ def beeper(funct) :
         return res
 
     return wrapper
-
-
-# In[ ]:
 
 
 # Please find here our meta GridSearchCV. For each params grid, it initiates a df, split 
@@ -1249,17 +1075,10 @@ def run_GSCV(   model=None,     params=None,
     
 ####
 
-lolo, grid = run_GSCV()
+# lolo, grid = run_GSCV()
 
-
-# In[ ]:
-
-
-print(lolo)
-print(grid)
-
-
-# In[ ]:
+# print(lolo)
+# print(grid)
 
 
 # Find here the models we will try and test
@@ -1279,9 +1098,6 @@ MODELS = [      LogisticRegression, RidgeClassifier,
                 RandomForestClassifier,
                 AdaBoostClassifier,
                 Perceptron, MLPClassifier   ]
-
-
-# In[ ]:
 
 
 # we now will benchmark various models, without any feat eng. or meta params. Just have a first look...
@@ -1312,103 +1128,50 @@ def benchmark_various_models(  n=5, df=None, graph=True, params=None,
 results = benchmark_various_models(10)
 
 
-# In[ ]:
-
-
 # print out raw values
-
-results.iloc[:10, :]
-
-
-# In[ ]:
-
+# results.iloc[:10, :]
 
 # lets have fancy representation of our results
-
-_results = results.describe().T.sort_values(by="50%")
-_results
-
-
-# In[ ]:
+# _results = results.describe().T.sort_values(by="50%")
+# _results
 
 
 # graph it 
+# results.boxplot()
+# plt.xlabel("models")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various models, without feat eng or meta params")
+# plt.show()
 
-results.boxplot()
-plt.xlabel("models")
-plt.ylabel("log_loss score")
-plt.title("benchmark various models, without feat eng or meta params")
-plt.show()
-
-
-# In[ ]:
-
-
-results = benchmark_various_outliers(10)
-
-
-# In[ ]:
-
+# results = benchmark_various_outliers(10)
 
 # raw results
-
-results.iloc[:10, :]
-
-
-# In[ ]:
-
+# results.iloc[:10, :]
 
 # global stats
+# _results = results.describe().T
+# _results.iloc[:10, :]
 
-print_gobal_stats(results)
-
-
-# In[ ]:
-
-
-# lets have fancy representation of our results
-
-_results = results.describe().T
-_results.iloc[:10, :]
-
-
-# In[ ]:
-
-
-# graph it 
-
-results.boxplot()
-plt.xlabel("outliers 'k' values")
-plt.ylabel("log_loss score")
-plt.title("benchmark various outliers 'k' values, without feat eng or meta params")
-plt.show()
-
-
-# In[ ]:
-
-
-# graph it 
-
-results.describe().T.loc[:, ["mean", "50%"]].plot()
-plt.xlabel("outliers 'k' values")
-plt.ylabel("log_loss score")
-plt.title("benchmark various outliers 'k' values, without feat eng or meta params")
-plt.show()
-
-
-# In[ ]:
-
+# graph 
+# results.boxplot()
+# plt.xlabel("outliers 'k' values")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various outliers 'k' values, without feat eng or meta params")
+# plt.show()
 
 # graph
+# results.describe().T.loc[:, ["mean", "50%"]].plot()
+# plt.xlabel("outliers 'k' values")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various outliers 'k' values, without feat eng or meta params")
+# plt.show()
 
-results.T.iloc[:, :10].plot()
-plt.xlabel("outliers 'k' values")
-plt.ylabel("log_loss score")
-plt.title("benchmark various outliers 'k' values, without feat eng or meta params")
-plt.show()
-
-
-# In[ ]:
+# graph
+# results.T.iloc[:, :10].plot()
+# plt.xlabel("outliers 'k' values")
+# plt.ylabel("log_loss score")
+# plt.title("benchmark various outliers 'k' values, without feat eng or meta params")
+# plt.show()
 
 
 # Now we will study various features transformation.
@@ -1477,18 +1240,12 @@ minmax_and_normalize   = lambda df : normalize(minmax(df))
 normalize_and_minmax   = lambda df : minmax(normalize(df))
 
 
-# In[ ]:
-
-
 # transorm list and index (str values)
 
 TRANSFORM_LIST  = [  nothing, normalize, standscale, minmax, minmax_and_standscale, standscale_and_minmax, 
                      minmax_and_normalize, normalize_and_minmax]
 TRANSFORM_INDEX = [  "nothing", "normalize", "standscale", "minmax", "minmax+stdsca", "stdsca+minmax", 
                      "minmax+norm", "minmax+norm"]
-
-
-# In[ ]:
 
 
 
@@ -1501,12 +1258,12 @@ def transform_lolo_gain(method, df, model=None, params=None) :
         
     if not params : params = dict()
 
-    grid = GridSearchCV(model, params, cv = 5, n_jobs=3, scoring="accuracy")
+    grid = GridSearchCV(model, params, cv=3, n_jobs=6, scoring="accuracy")
         
     # init lolo
     X_tr, X_te, y_tr, y_te = split(*return_X_y(df))  
     grid.fit(X_tr, y_tr)   
-    y_pred = grid.predict_proba(X_e)[:, 1]
+    y_pred = grid.predict_proba(X_te)[:, 1]
     init_lolo = lolo = log_loss(y_te, y_pred)
 
     # new lolo
@@ -1517,9 +1274,6 @@ def transform_lolo_gain(method, df, model=None, params=None) :
     new_lolo = log_loss(y_te, y_pred)
     
     return round((init_lolo - new_lolo) / init_lolo,3)
-
-
-# In[ ]:
 
 
 # here we have our benchmark function 
@@ -1551,23 +1305,14 @@ def benchmark_various_transform(   n=10, df=None, graph=True, params=None, model
 results = benchmark_various_transform(10)
 
 
-# In[ ]:
-
-
 # raw results 
 
 results.iloc[:10, :]
 
 
-# In[ ]:
-
-
 # gobal results
 
 print_gobal_stats(results)
-
-
-# In[ ]:
 
 
 # graph  
@@ -1579,16 +1324,10 @@ plt.title("benchmark various df transforms, without feat eng or meta params")
 plt.show()
 
 
-# In[ ]:
-
-
 # fancy results
 
 _results = results.describe().T.sort_values(by="50%", ascending=False)
 _results
-
-
-# In[ ]:
 
 
 # graph 
@@ -1597,9 +1336,6 @@ results.T.iloc[:,:10].plot()
 plt.xlabel("transformations of df")
 plt.ylabel("log_loss score")
 plt.title("benchmark various df transforms, without feat eng or meta params")
-
-
-# In[ ]:
 
 
 def scoring_lolo_gain(scoring, df, model=None, params=None) : 
@@ -1611,7 +1347,7 @@ def scoring_lolo_gain(scoring, df, model=None, params=None) :
         
     if not params : params = dict()
 
-    grid = GridSearchCV(model, params, cv = 5, n_jobs=3, scoring="accuracy")
+    grid = GridSearchCV(model, params, cv=3, n_jobs=6, scoring="accuracy")
         
     # init lolo
     X_tr, X_te, y_tr, y_te = split(*return_X_y(df))  
@@ -1619,7 +1355,7 @@ def scoring_lolo_gain(scoring, df, model=None, params=None) :
     y_pred = grid.predict_proba(X_te)[:, 1]
     init_lolo = lolo = log_loss(y_te, y_pred)
 
-    grid = GridSearchCV(model, params, cv = 5, n_jobs=3, scoring=scoring)
+    grid = GridSearchCV(model, params, cv=3, n_jobs=6, scoring=scoring)
     
     # new lolo
     X_tr, X_te, y_tr, y_te = split(*return_X_y(df))
@@ -1628,9 +1364,6 @@ def scoring_lolo_gain(scoring, df, model=None, params=None) :
     new_lolo = log_loss(y_te, y_pred)
     
     return round((init_lolo - new_lolo) / init_lolo,3)
-
-
-# In[ ]:
 
 
 # ok let's do the same thing for scoring ! 
@@ -1660,23 +1393,14 @@ def benchmark_various_scoring(  n=5, df=None, graph=True, params=None, model=Non
 results = benchmark_various_scoring(10)
 
 
-# In[ ]:
-
-
 # raw results
 
 results.iloc[:10, :]
 
 
-# In[ ]:
-
-
 # gobal results
 
 print_gobal_stats(results)
-
-
-# In[ ]:
 
 
 # graph 
@@ -1688,16 +1412,10 @@ plt.title("benchmark various scoring, without feat eng or meta params")
 plt.show()
 
 
-# In[ ]:
-
-
 # fancy results
 
 _results = results.describe().T.sort_values(by="50%", ascending=False)
 _results
-
-
-# In[ ]:
 
 
 # graph 
@@ -1709,9 +1427,6 @@ plt.title("benchmark various scoring, without feat eng or meta params")
 plt.show()
 
 
-# In[ ]:
-
-
 def cv_lolo_gain(cv, df, model=None, params=None) : 
     
     if not isinstance(df, pd.DataFrame) : 
@@ -1721,7 +1436,7 @@ def cv_lolo_gain(cv, df, model=None, params=None) :
         
     if not params : params = dict()
 
-    grid = GridSearchCV(model, params, cv = 5, n_jobs=3, scoring="accuracy")
+    grid = GridSearchCV(model, params, cv=3, n_jobs=6, scoring="accuracy")
         
     # init lolo
     X_tr, X_te, y_tr, y_te = split(*return_X_y(df))  
@@ -1729,7 +1444,7 @@ def cv_lolo_gain(cv, df, model=None, params=None) :
     y_pred = grid.predict_proba(X_te)[:, 1]
     init_lolo = lolo = log_loss(y_te, y_pred)
 
-    grid = GridSearchCV(model, params, cv = cv, n_jobs=3, scoring="accuracy")
+    grid = GridSearchCV(model, params, cv = cv, n_jobs=6, scoring="accuracy")
     
     # new lolo
     X_tr, X_te, y_tr, y_te = split(*return_X_y(df))
@@ -1738,9 +1453,6 @@ def cv_lolo_gain(cv, df, model=None, params=None) :
     new_lolo = log_loss(y_te, y_pred)
     
     return round((init_lolo - new_lolo) / init_lolo,3)
-
-
-# In[ ]:
 
 
 # 'overkill' OK, let's be evil, we now are ready to benchmark Kfolds numbers and test/train size ! 
@@ -1772,23 +1484,14 @@ def benchmark_various_cv(   n=5, df=None, graph=True, params=None, model=None,
 results = benchmark_various_cv(10)
 
 
-# In[ ]:
-
-
 # raw results
 
 results.head()
 
 
-# In[ ]:
-
-
 # gobal results
 
 print_gobal_stats(results)
-
-
-# In[ ]:
 
 
 # graph
@@ -1800,16 +1503,10 @@ plt.title("benchmark various nb of kfolds, without feat eng or meta params")
 plt.show()
 
 
-# In[ ]:
-
-
 # fancy results
 
 _results = results.describe().T.sort_values(by="50%", ascending=False)
 _results
-
-
-# In[ ]:
 
 
 # graph 
@@ -1819,9 +1516,6 @@ plt.xlabel("nb of kfolds methods for grid search")
 plt.ylabel("log_loss score")
 plt.title("benchmark various nb of kfolds, without feat eng or meta params")
 plt.show()
-
-
-# In[ ]:
 
 
 # without getting mad about results, we can see that it is not very easy to use
@@ -1836,7 +1530,7 @@ def test_train_lolo_gain(test_size, df, model=None, params=None) :
         
     if not params : params = dict()
 
-    grid = GridSearchCV(model, params, cv = 5, n_jobs=3, scoring="accuracy")
+    grid = GridSearchCV(model, params, cv=3, n_jobs=6, scoring="accuracy")
         
     # init lolo
     X_tr, X_te, y_tr, y_te = split(*return_X_y(df))  
@@ -1851,9 +1545,6 @@ def test_train_lolo_gain(test_size, df, model=None, params=None) :
     new_lolo = log_loss(y_te, y_pred)
     
     return round((init_lolo - new_lolo) / init_lolo,3)
-
-
-# In[ ]:
 
 
 # 'overkill' idem for test/train ratio
@@ -1885,23 +1576,14 @@ def benchmark_various_test_size(   n=5, df=None, graph=True, params=None, model=
 results = benchmark_various_test_size(10)
 
 
-# In[ ]:
-
-
 # raw results
 
 results.iloc[:10, :]
 
 
-# In[ ]:
-
-
 # gobal results
 
 print_gobal_stats(results)
-
-
-# In[ ]:
 
 
 # graph 
@@ -1913,16 +1595,10 @@ plt.title("benchmark various test_size for test/train split, without feat eng or
 plt.show()
 
 
-# In[ ]:
-
-
 # fancy results
 
 _results = results.describe().T.sort_values(by="50%", ascending=False).iloc[:10, :]
 _results
-
-
-# In[ ]:
 
 
 # graph 
@@ -1932,9 +1608,6 @@ plt.xlabel("nb of test_size for test/train split")
 plt.ylabel("log_loss score")
 plt.title("benchmark various test_size for test/train split, without feat eng or meta params")
 plt.show()
-
-
-# In[ ]:
 
 
 # we now will try to ehance our output with thresholding our predictions 
@@ -1962,9 +1635,6 @@ def clipping_log_loss(y_pred, y_test=None, x=0.05) :
         info(log_loss(y_test, y_pred))
     
     return y_pred
-
-
-# In[ ]:
 
 
 # compute lolo gain for one k threshold
@@ -2002,9 +1672,6 @@ def clipping_lolo_gain(k, df, model=None, params=None) :
 
 
 
-# In[ ]:
-
-
 # idem for every threshold between 0.0 and 0.5
 
 def benchmark_various_lolo_clipping(   n=20, df=None, graph=True, params=None, 
@@ -2036,15 +1703,9 @@ def benchmark_various_lolo_clipping(   n=20, df=None, graph=True, params=None,
 results = benchmark_various_lolo_clipping(10)
 
 
-# In[ ]:
-
-
 # raw results
 
 results.iloc[:10, :]
-
-
-# In[ ]:
 
 
 # gobal results
@@ -2052,15 +1713,9 @@ results.iloc[:10, :]
 print_gobal_stats(results)
 
 
-# In[ ]:
-
-
 # graph 
 
 results.boxplot()
-
-
-# In[ ]:
 
 
 # fancy results 
@@ -2069,15 +1724,9 @@ _results = results.describe().T.sort_values(by="50%", axis=0, ascending=False).i
 _results
 
 
-# In[ ]:
-
-
 # graph
 
 results.iloc[:10, :].T.plot()
-
-
-# In[ ]:
 
 
 # we now will study the impact of softmax method on our output predictions
@@ -2089,9 +1738,6 @@ def exp_softmax(x):
     e_x = np.exp(x - np.max(x))
     return e_x / e_x.sum()
 
-
-
-# In[ ]:
 
 
 # we will compute our method, which is a linear soft max method
@@ -2106,9 +1752,6 @@ def lin_softmax(ser, k=2, p=0.1, t=0.5) :
     _soft_extr = lambda x : x if dist_med(x)>= t else (x + coef(x) if is_u(x) else x - coef(x))
 
     return [_soft_extr(i) for i in ser]
-
-
-# In[ ]:
 
 
 # compute lolo gain for one k threshold
@@ -2144,9 +1787,6 @@ def softmax_lolo_gain(k, p, t, df, model=None, params=None) :
 
     return round((init_lolo - new_lolo) / init_lolo,3)
 
-
-
-# In[ ]:
 
 
 
@@ -2185,15 +1825,9 @@ def benchmark_various_softmax_lolo(   n=20, df=None, graph=True, params=None,
 results = benchmark_various_softmax_lolo(10)
 
 
-# In[ ]:
-
-
 # raw results
 
 results.iloc[:10, :]
-
-
-# In[ ]:
 
 
 # gobal results
@@ -2201,16 +1835,10 @@ results.iloc[:10, :]
 print_gobal_stats(results)
 
 
-# In[ ]:
-
-
 # fancy results 
 
 _results = results.describe().T.sort_values(by="50%", axis=0, ascending=False).iloc[:10, :]
 _results
-
-
-# In[ ]:
 
 
 # compute lolo gain for one k threshold
@@ -2248,9 +1876,6 @@ def softmax_clip_lolo_gain(x, k, p, t, df, model=None, params=None) :
     return round((init_lolo - new_lolo) / init_lolo,3)
 
 
-# In[ ]:
-
-
 
 def benchmark_various_softmax_clipping_lolo(   n=20, df=None, graph=True, params=None, 
                                         model=None, softmax_clip_list=None) : 
@@ -2267,7 +1892,7 @@ def benchmark_various_softmax_clipping_lolo(   n=20, df=None, graph=True, params
     if not softmax_clip_list : 
 
         t = 0.5
-        x = np.arange(0.01, 0.31, 0.03).round(2)
+        x = np.arange(0.01, 0.11, 0.01).round(2)
         k = np.arange(1,5.1, 0.5).round(2)
         p = np.arange(0.1, 0.51, 0.1).round(2)
         softmax_clip_list = [ (a,b,c) for a in x for b in k for c in p]
@@ -2289,9 +1914,6 @@ def benchmark_various_softmax_clipping_lolo(   n=20, df=None, graph=True, params
 results = benchmark_various_softmax_clipping_lolo(5)
 
 
-# In[ ]:
-
-
 x = np.arange(0.01, 0.31, 0.03).round(2)
 k = np.arange(1,5.1, 0.5).round(2)
 p = np.arange(0.1, 0.51, 0.1).round(2)
@@ -2299,14 +1921,8 @@ softmax_clip_list = [ (a,b,c) for a in x for b in k for c in p]
 len(softmax_clip_list)
 
 
-# In[ ]:
-
-
 
     
-
-
-# In[ ]:
 
 
 # Conclusion
@@ -2322,9 +1938,6 @@ len(softmax_clip_list)
 # - without knowning precisily the good value, we can say that cliping our results is a good thing 
 # - what about soft max ? it is not for now a good solution, but maybe we can try it later, with over
 # params...
-
-
-# In[ ]:
 
 
 #####################################################################################################
@@ -2346,15 +1959,9 @@ len(softmax_clip_list)
 # better than a model by default
 
 
-# In[ ]:
-
-
 # import
 
 # from starting_ML import *
-
-
-# In[ ]:
 
 
 
@@ -2374,9 +1981,6 @@ def combine_param_dict(d) :
 d = {"a" : ["a","b","c"], "b": [0,1,2,3,4]}
 d = combine_param_dict(d)
 d
-
-
-# In[ ]:
 
 
 def grid_LogisticRegression(df=None, param=None,
@@ -2428,9 +2032,6 @@ def grid_LogisticRegression(df=None, param=None,
     # return lolo, grid
 
 
-# In[ ]:
-
-
 all_params     =      { "penalty":["l1", "l2"],
                         "dual":[True, False],
                         "tol":[0.0001, 0.001],            # consider also np.logspace(-6, 2, 9)
@@ -2442,9 +2043,6 @@ all_params     =      { "penalty":["l1", "l2"],
                         "max_iter":[100],                   # consider also np.logspace(3, 5, 3)
                         "multi_class":["ovr", "multinomial"],
                         "warm_start":[True, False],   }
-
-
-# In[ ]:
 
 
 
@@ -2494,9 +2092,6 @@ print()
 print(_mean(ser))
 print(_med(ser))
 print(_mix(ser))
-
-
-# In[ ]:
 
 
 
@@ -2570,28 +2165,16 @@ def benchmark_various_params(model, params, n=None, df=None,
 results = benchmark_various_params(LogisticRegression, all_params, 10, save=True)
 
 
-# In[ ]:
-
-
 BEST_PARAMS = results.iloc[:10, :]
 BEST_PARAMS
-
-
-# In[ ]:
 
 
 best_params = results.iloc[0, :]
 best_params
 
 
-# In[ ]:
-
-
 best_params = {i : [j] for i, j in zip(best_params.index, best_params.values) if i != "lolo"}
 best_params
-
-
-# In[ ]:
 
 
 # let's try this model n times
@@ -2600,15 +2183,9 @@ n = 40
 results = [run_GSCV(LogisticRegression, best_params)[0] for i in range(n)]
 
 
-# In[ ]:
-
-
 # raw results
 
 pd.Series(results).describe()
-
-
-# In[ ]:
 
 
 # let's try our theorical best model (feat eng. scoring...)
@@ -2620,13 +2197,7 @@ results = [run_GSCV(LogisticRegression, best_params, _df, scoring="roc_auc", cv=
 
 
 
-# In[ ]:
-
-
 pd.Series(results).describe()
-
-
-# In[ ]:
 
 
 # let's definitively find the real best params grid
@@ -2639,35 +2210,20 @@ params_grid_list = [{i : [j] for i, j in
 params_grid_list
 
 
-# In[ ]:
-
-
 n = 40
 results = [[run_GSCV(LogisticRegression, p)[0] for p in params_grid_list] for i in range(n)]
 results = pd.DataFrame(results, columns = [str("pg_"+str(i)) for i,j in enumerate(params_grid_list)])
 
 
-# In[ ]:
-
-
 results
-
-
-# In[ ]:
 
 
 _results = results.describe().T.sort_values(by="mean", axis=0)
 _results
 
 
-# In[ ]:
-
-
 best_params = params_grid_list[2]
 best_params
-
-
-# In[ ]:
 
 
 # let's try our theorical best model (feat eng. scoring...)
@@ -2678,13 +2234,7 @@ n = 40
 results = [run_GSCV(LogisticRegression, best_params, _df, scoring="roc_auc", cv=10, test_size=0.33)[0] for i in range(n)]
 
 
-# In[ ]:
-
-
 pd.Series(results).describe()
-
-
-# In[ ]:
 
 
 #####################################################################################################
@@ -2702,15 +2252,9 @@ pd.Series(results).describe()
 # cddscdscsdc
 
 
-# In[ ]:
-
-
 # import 
 
 # from finding_good_models import * 
-
-
-# In[ ]:
 
 
 p = {   "solver"            : ["liblinear"],
@@ -2726,13 +2270,7 @@ p = {   "solver"            : ["liblinear"],
         "multi_class"       : ["ovr"],  }
 
 
-# In[ ]:
-
-
 params = p
-
-
-# In[ ]:
 
 
 # warm up
@@ -2754,9 +2292,6 @@ print(lolo)
 print(grid)
 
 
-# In[ ]:
-
-
 # training
 
 train_df    = build_df(DATA, TRAIN_FILE)
@@ -2772,9 +2307,6 @@ grid        = GridSearchCV( estimator   = model,
 grid.fit(X,y)
 
 
-# In[ ]:
-
-
 # predicting
 
 test_df     = build_df(DATA, TEST_FILE)
@@ -2784,18 +2316,12 @@ y_pred      = grid.predict_proba(test_df)
 y_pred      = y_pred[:,1]
 
 
-# In[ ]:
-
-
 y_pred      = pd.Series(y_pred, name="Made Donation in March 2007", index = test_df.index, dtype=np.float64)
 path        = finding_master_path("submissions", PROJECT)
 path        += "submission0.csv"
 y_pred.to_csv(  path, index=True, header=True, index_label="")
 
 print("done")
-
-
-# In[ ]:
 
 
 from IPython.display import Image
