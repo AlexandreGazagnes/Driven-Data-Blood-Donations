@@ -1014,11 +1014,11 @@ def run_GSCV(   model=None,     params=None,
     is_df               = isinstance(df, pd.DataFrame)
     if not is_df        : df = build_df(DATA, TRAIN_FILE)
     if not params       : params = dict()
-    if not cv           : cv=5
+    if not cv           : cv=10
     if not n_jobs       : n_jobs = 6
-    if not scoring      : scoring = "accuracy"
+    if not scoring      : scoring = "average_precision"
     if not verbose      : verbose = 1
-    if not test_size    : test_size = 0.33
+    if not test_size    : test_size = 0.25
     if not debug_mode   : debug_mode = False
     grid = None
 
@@ -1794,6 +1794,7 @@ def benchmark_various_softmax_lolo(   n=20, df=None, graph=True, params=None,
 
 
 # results = benchmark_various_softmax_lolo(10)
+# results.to_csv("benchmark_various_softmax_lolo1.csv", index=False)
 
 
 # raw results
@@ -1869,8 +1870,7 @@ def benchmark_various_softmax_clipping_lolo(    n=20, df=None, graph=True,
             raise ValueError(" to long to compute")
     
     results = [ [softmax_clip_lolo_gain(x, k, p, t, df, model, params) for
-                     (x, k,p) in softmax_clip_list]
-                     for _ in range(n)]
+                     (x, k, p) in softmax_clip_list] for _ in range(n)]
     
     results = pd.DataFrame(results, columns=softmax_clip_list)
     
@@ -1880,8 +1880,8 @@ def benchmark_various_softmax_clipping_lolo(    n=20, df=None, graph=True,
 ####
 
 
-results = benchmark_various_softmax_clipping_lolo(5)
-    
+# results = benchmark_various_softmax_clipping_lolo(10)
+# results.to_csv("benchmark_various_softmax_clipping_lolo0.csv", index=False)  
 
 
 # Conclusion
@@ -1937,9 +1937,9 @@ def combine_param_dict(d) :
 
 ####
 
-d = {"a" : ["a","b","c"], "b": [0,1,2,3,4]}
-d = combine_param_dict(d)
-d
+# d = {"a" : ["a","b","c"], "b": [0,1,2,3,4]}
+# d = combine_param_dict(d)
+# d
 
 
 def grid_LogisticRegression(df=None, param=None,
@@ -2041,16 +2041,16 @@ def _mix(x) :
 
 ####
 
-ser = pd.Series([1,2,3,4,5,6,7,8, 10, 1000])
-print(ser.mean())
-print(ser.median())
-print(pd.Series([ser.mean(), ser.median()]).mean())
+# ser = pd.Series([1,2,3,4,5,6,7,8, 10, 1000])
+# print(ser.mean())
+# print(ser.median())
+# print(pd.Series([ser.mean(), ser.median()]).mean())
 
-print()
+# print()
 
-print(_mean(ser))
-print(_med(ser))
-print(_mix(ser))
+# print(_mean(ser))
+# print(_med(ser))
+# print(_mix(ser))
 
 
 

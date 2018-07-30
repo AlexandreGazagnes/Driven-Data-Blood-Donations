@@ -1,0 +1,47 @@
+In [10]: res.iloc[:20, :]
+Out[10]: 
+     max_iter multi_class  fit_intercept penalty   dual  warm_start      C  \
+70        100         ovr           True      l2  False        True   1.00   
+117       100         ovr           True      l2  False       False   1.00   
+120       100         ovr           True      l2  False       False  10.00   
+58        100         ovr           True      l2  False        True   0.10   
+29        100         ovr           True      l1  False       False  10.00   
+82        100         ovr           True      l2  False        True  10.00   
+94        100         ovr           True      l2  False       False   0.01   
+73        100         ovr           True      l2  False        True   1.00   
+76        100         ovr           True      l2  False        True   1.00   
+99        100         ovr           True      l2  False       False   0.10   
+62        100         ovr           True      l2  False        True   0.10   
+81        100         ovr           True      l2  False        True  10.00   
+51        100         ovr           True      l2  False        True   0.01   
+56        100         ovr           True      l2  False        True   0.01   
+98        100         ovr           True      l2  False       False   0.10   
+110       100         ovr           True      l2  False       False   1.00   
+125       100         ovr           True      l2  False       False  10.00   
+63        100         ovr           True      l2  False        True   0.10   
+84        100         ovr           True      l2  False        True  10.00   
+30        100         ovr           True      l1  False       False  10.00   
+
+    class_weight     solver     tol  intercept_scaling   lolo  
+70          None      lbfgs  0.0001                  1  0.471  
+117         None       saga  0.0010                  1  0.472  
+120         None      lbfgs  0.0001                  1  0.473  
+58          None  newton-cg  0.0001                  1  0.473  
+29          None  liblinear  0.0010                  1  0.475  
+82          None  liblinear  0.0001                  1  0.475  
+94          None        sag  0.0001                  1  0.476  
+73          None  liblinear  0.0010                  1  0.476  
+76          None       saga  0.0001                  1  0.476  
+99          None  newton-cg  0.0010                  1  0.477  
+62          None  liblinear  0.0001                  1  0.478  
+81          None      lbfgs  0.0010                  1  0.478  
+51          None      lbfgs  0.0010                  1  0.479  
+56          None       saga  0.0001                  1  0.479  
+98          None  newton-cg  0.0001                  1  0.479  
+110         None      lbfgs  0.0001                  1  0.479  
+125         None        sag  0.0010                  1  0.480  
+63          None  liblinear  0.0010                  1  0.480  
+84          None        sag  0.0001                  1  0.481  
+30          None       saga  0.0001                  1  0.482  
+
+
