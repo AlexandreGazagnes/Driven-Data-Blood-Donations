@@ -1,0 +1,15 @@
+init file         
+model :   <class 'sklearn.linear_model.logistic.LogisticRegression'>      
+params :  - 
+n :       100      
+meth :    <function _mix at 0x7f9be486a268>      
+0.475,{'penalty': ['l1'], 'tol': [0.001], 'class_weight': [None], 'max_iter': [100], 'intercept_scaling': [1], 'multi_class': ['ovr'], 'solver': ['liblinear'], 'C': [1], 'warm_start': [True], 'dual': [False], 'fit_intercept': [True]}
+
+
+0.488,{'penalty': ['l1'], 'tol': [0.001], 'class_weight': [None], 'max_iter': [100], 'intercept_scaling': [1], 'multi_class': ['ovr'], 'solver': ['liblinear'], 'C': [0.1], 'warm_start': [True], 'dual': [False], 'fit_intercept': [True]}
+0.484,{'penalty': ['l1'], 'tol': [0.0001], 'class_weight': [None], 'max_iter': [100], 'intercept_scaling': [1], 'multi_class': ['ovr'], 'solver': ['liblinear'], 'C': [1], 'warm_start': [True], 'dual': [False], 'fit_intercept': [True]}
+0.489,{'penalty': ['l1'], 'tol': [0.0001], 'class_weight': [None], 'max_iter': [100], 'intercept_scaling': [1], 'multi_class': ['ovr'], 'solver': ['saga'], 'C': [0.1], 'warm_start': [False], 'dual': [False], 'fit_intercept': [True]}
+0.487,{'penalty': ['l1'], 'tol': [0.0001], 'class_weight': [None], 'max_iter': [100], 'intercept_scaling': [1], 'multi_class': ['ovr'], 'solver': ['liblinear'], 'C': [1], 'warm_start': [False], 'dual': [False], 'fit_intercept': [True]}
+0.484,{'penalty': ['l1'], 'tol': [0.0001], 'class_weight': [None], 'max_iter': [100], 'intercept_scaling': [1], 'multi_class': ['ovr'], 'solver': ['saga'], 'C': [10], 'warm_start': [True], 'dual': [False], 'fit_intercept': [True]}
+0.48,{'penalty': ['l1'], 'tol': [0.0001], 'class_weight': [None], 'max_iter': [100], 'intercept_scaling': [1], 'multi_class': ['ovr'], 'solver': ['liblinear'], 'C': [10], 'warm_start': [True], 'dual': [False], 'fit_intercept': [True]}
+0.485,{'penalty': ['l1'], 'tol': [0.0001], 'class_weight': [None], 'max_iter': [100], 'intercept_scaling': [1], 'multi_class': ['ovr'], 'solver': ['liblinear'], 'C': [0.1], 'warm_start': [True], 'dual': [False], 'fit_intercept': [True]}

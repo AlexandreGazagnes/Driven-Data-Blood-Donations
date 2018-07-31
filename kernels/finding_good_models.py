@@ -211,64 +211,6 @@ def benchmark_various_params(model, params, n=None, df=None, meth=None, save=Tru
 
 
 
-"""
-LOGISTIC REGRESSION, NO FEATURES ENG
-FOR 10 TESTS :
-
-In [0]: r = benchmark_various_params_once(LogisticRegression, all_params2, 100)
-
-Out[0]:
-
-    {   "solver"            : ["liblinear"],
-        "class_weight"      : [None], 
-        "dual"              : [False],
-        "intercept_scaling" : [1],
-        "fit_intercept"     : [True],
-        "C"                 : [10],
-        "tol"               : [0.001],
-        "max_iter"          : [100],
-        "warm_start"        : [False],
-        "penalty"           : ["l2"],
-        "multi_class"       : ["ovr"],  }
-    
-"""
-
-
-"""
-LOGISTIC REGRESSION, NO FEATURES ENG
-FOR 100 TESTS : 
-
-In [0]: r = benchmark_various_params_once(LogisticRegression, all_params2, 100)
-
-Out[0]: 
-       solver class_weight   dual  intercept_scaling  fit_intercept     C  \
-598        sag         None  False                  1           True  0.10   
-138  newton-cg         None  False                  1           True  1.00   
-106  newton-cg         None  False                  1           True  0.01   
-462  liblinear         None  False                  1           True  1.00   
-448  liblinear         None  False                  1           True  1.00   
-442  liblinear         None  False                  1           True  0.10   
-458  liblinear         None  False                  1           True  1.00   
-452  liblinear         None  False                  1           True  1.00   
-114  newton-cg         None  False                  1           True  0.10   
-282      lbfgs         None  False                  1           True  0.10   
-
-        tol  max_iter  warm_start penalty multi_class   lolo  
-598  0.0001       100       False      l2         ovr  0.484  
-138  0.0010       100        True      l2         ovr  0.486  
-106  0.0010       100        True      l2         ovr  0.486  
-462  0.0010       100       False      l2         ovr  0.487  
-448  0.0001       100        True      l1         ovr  0.488  
-442  0.0010       100        True      l2         ovr  0.488  
-458  0.0010       100        True      l2         ovr  0.489  
-452  0.0001       100       False      l1         ovr  0.489  
-114  0.0001       100        True      l2         ovr  0.489  
-282  0.0010       100        True      l2         ovr  0.489  
-
-"""
-
-
-
 
 
 # @decor_grid

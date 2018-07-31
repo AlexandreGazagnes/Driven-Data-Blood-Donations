@@ -1003,7 +1003,8 @@ def run_GSCV(   model=None,     params=None,
                 df=None,        tup=None,
                 cv=0,           n_jobs=None,
                 scoring=None,   test_size=None, 
-                verbose=None,   debug_mode=None) : 
+                verbose=None,   debug_mode=None,
+                clip=None) : 
 
     # init default params
     if not model        : model = LogisticRegression()
@@ -1018,7 +1019,7 @@ def run_GSCV(   model=None,     params=None,
     if not n_jobs       : n_jobs = 6
     if not scoring      : scoring = "average_precision"
     if not verbose      : verbose = 1
-    if not test_size    : test_size = 0.25
+    if not test_size    : test_size = 0.33
     if not debug_mode   : debug_mode = False
     grid = None
 
@@ -1076,6 +1077,8 @@ def run_GSCV(   model=None,     params=None,
             raise(e)
 
     try : # compute log_loss as 'lolo' 
+        if clip : 
+            y_pred = clipping_log_loss(y_pred, x=clip)
         lolo = log_loss(y_te, y_pred).round(3)
         info("lolo ok")
         info(lolo)
@@ -1991,6 +1994,74 @@ def grid_LogisticRegression(df=None, param=None,
     # return lolo, grid
 
 
+
+
+
+# @decor_grid
+# @timer
+def grid_MLPClassifier( df=None, param=None,
+                        model=MLPClassifier):
+
+    default_params  = {}
+
+    none_params     = {}
+        
+# "activation": ["identity", "logistic", "tanh", "relu"],   
+# "solver": ["lbfgs", "sgd", "adam"],   
+# "alpha": np.logspace(-4, 2, 9), 
+
+    params          = { "hidden_layer_sizes": [(3,3,3), (3,3), (4,4), (5,5), (5,5,5), (4,4,4)],   
+                        "activation": ["identity", "logistic", "tanh", "relu"],   
+                        "solver": ["lbfgs", "sgd", "adam"],   
+                        "alpha": np.logspace(-4, 2, 9),   
+                        "batch_size": ["auto"],   
+                        "learning_rate": ["constant", "invscaling", "adaptive"],   
+                        "learning_rate_init": [0.001],   
+                        "power_t": [0.5],   
+                        "max_iter": [200, 1000, 5000],   
+                        "shuffle": [True],      
+                        "tol": [0.0001],      
+                        "warm_start": [False, True],   
+                        "momentum": [0.9],   
+                        "nesterovs_momentum": [True],   
+                        "early_stopping": [False],   
+                        "validation_fraction": [0.1],   
+                        "beta_1": [0.9],   
+                        "beta_2": [0.999],   
+                        "epsilon": [1e-08]}
+
+    all_params      = { "hidden_layer_sizes": [(4,4,4)],   
+                        "activation": ["identity", "logistic", "tanh", "relu"],   
+                        "solver": ["lbfgs", "sgd", "adam"],   
+                        "alpha": np.logspace(-4, 2, 9),   
+                        "batch_size": ["auto"],   
+                        "learning_rate": ["constant", "invscaling", "adaptive"],   
+                        "learning_rate_init": [0.001],   
+                        "power_t": [0.5],   
+                        "max_iter": [200],   
+                        "shuffle": [True],      
+                        "tol": [0.0001],      
+                        "warm_start": [True],   
+                        "momentum": [0.9],   
+                        "nesterovs_momentum": [True],   
+                        "early_stopping": [False],   
+                        "validation_fraction": [0.1],   
+                        "beta_1": [0.9],   
+                        "beta_2": [0.999],   
+                        "epsilon": [1e-08]}
+
+
+
+    if not param :  param = none_params
+    else  :         param = params
+
+    # lolo, grid       = run_GSCV(model, param, None)
+
+    # return lolo, grid
+
+
+
+
 all_params     =      { "penalty":["l1", "l2"],
                         "dual":[True, False],
                         "tol":[0.0001, 0.001],            # consider also np.logspace(-6, 2, 9)
@@ -2002,6 +2073,11 @@ all_params     =      { "penalty":["l1", "l2"],
                         "max_iter":[100],                   # consider also np.logspace(3, 5, 3)
                         "multi_class":["ovr", "multinomial"],
                         "warm_start":[True, False],   }
+
+
+
+
+
 
 
 
@@ -2058,14 +2134,13 @@ def _mix(x) :
 def benchmark_various_params(model, params, n=None, df=None, 
                              meth=None, save=True) : 
 
-
     if not isinstance(df, pd.DataFrame): 
         df = build_df(DATA, TRAIN_FILE)
 
     if not n : 
         n = 10
 
-    if      meth == None   : meth = _mix
+    if      meth == None   : meth = _med
     elif    meth == "mean" : meth = _mean
     elif    meth == "med"  : meth = _med
     elif    meth == "mix"  : meth = _mix
@@ -2084,6 +2159,32 @@ def benchmark_various_params(model, params, n=None, df=None,
     columns.append("lolo")
 
     param_dict = combine_param_dict(params)
+
+
+
+    param_dict = [
+    
+                    {'alpha': [0.5623413251903491], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['tanh'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['invscaling']},
+                    {'alpha': [0.5623413251903491], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['tanh'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['adam'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['adaptive']},
+                    {'alpha': [0.1], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['constant']},
+                    {'alpha': [0.01778279410038923], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['adaptive']},
+                    {'alpha': [3.1622776601683795], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['relu'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['adaptive']},
+                    {'alpha': [3.1622776601683795], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['tanh'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['constant']},
+                    {'alpha': [0.0001], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['adaptive']},
+                    {'alpha': [0.0005623413251903491], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['invscaling']},
+                    {'alpha': [0.0031622776601683794], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['constant']},
+                    {'alpha': [0.1], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['relu'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['adaptive']},
+                    {'alpha': [17.78279410038923], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['invscaling']},
+                    {'alpha': [17.78279410038923], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['constant']},
+                    {'alpha': [0.0005623413251903491], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['adaptive']},
+                    {'alpha': [0.1], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['adaptive']},
+                    {'alpha': [0.5623413251903491], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['constant']},
+                    {'alpha': [3.1622776601683795], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['adaptive']},
+                    {'alpha': [17.78279410038923], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['identity'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['sgd'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['adaptive']},
+                    {'alpha': [0.01778279410038923], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['logistic'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['constant']},
+                    {'alpha': [0.1], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['tanh'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['adam'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['adaptive']},
+                    {'alpha': [0.5623413251903491], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['relu'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True], 'nesterovs_momentum': [True], 'learning_rate_init': [0.001], 'batch_size': ['auto'], 'max_iter': [200], 'validation_fraction': [0.1], 'epsilon': [1e-08], 'momentum': [0.9], 'warm_start': [True], 'learning_rate': ['invscaling']},
+                    {'alpha': [0.0001], 'beta_1': [0.9], 'tol': [0.0001], 'activation': ['logistic'], 'early_stopping': [False], 'hidden_layer_sizes': [(4, 4, 4)], 'solver': ['lbfgs'], 'power_t': [0.5], 'beta_2': [0.999], 'shuffle': [True]}   ]
 
     results = list()
 
@@ -2121,140 +2222,143 @@ def benchmark_various_params(model, params, n=None, df=None,
 
 ####
 
-results = benchmark_various_params(LogisticRegression, all_params, 10, save=True)
+# results = benchmark_various_params(LogisticRegression, all_params, 10, save=True)
 
 
-BEST_PARAMS = results.iloc[:10, :]
-BEST_PARAMS
+# BEST_PARAMS = results.iloc[:10, :]
+# BEST_PARAMS
 
 
-best_params = results.iloc[0, :]
-best_params
+# best_params = results.iloc[0, :]
+# best_params
 
 
-best_params = {i : [j] for i, j in zip(best_params.index, best_params.values) if i != "lolo"}
-best_params
+# best_params = {i : [j] for i, j in zip(best_params.index, best_params.values) if i != "lolo"}
+# best_params
 
 
-# let's try this model n times
+# # let's try this model n times
 
-n = 40
-results = [run_GSCV(LogisticRegression, best_params)[0] for i in range(n)]
-
-
-# raw results
-
-pd.Series(results).describe()
+# n = 40
+# results = [run_GSCV(LogisticRegression, best_params)[0] for i in range(n)]
 
 
-# let's try our theorical best model (feat eng. scoring...)
+# # raw results
 
-_df = standscale(delete_outliers(df,1.3))
-
-n = 40
-results = [run_GSCV(LogisticRegression, best_params, _df, scoring="roc_auc", cv=10, test_size=0.33)[0] for i in range(n)]
+# pd.Series(results).describe()
 
 
+# # let's try our theorical best model (feat eng. scoring...)
 
-pd.Series(results).describe()
+# _df = standscale(delete_outliers(df,1.3))
 
-
-# let's definitively find the real best params grid
-
-
-params_grid_list = [{i : [j] for i, j in 
-                         zip(BEST_PARAMS.loc[k, :].index, BEST_PARAMS.loc[k, :].values) if i != "lolo"}
-                        for k in BEST_PARAMS.index]
-
-params_grid_list
+# n = 40
+# results = [run_GSCV(LogisticRegression, best_params, _df, scoring="roc_auc", cv=10, test_size=0.33)[0] for i in range(n)]
 
 
-n = 40
-results = [[run_GSCV(LogisticRegression, p)[0] for p in params_grid_list] for i in range(n)]
-results = pd.DataFrame(results, columns = [str("pg_"+str(i)) for i,j in enumerate(params_grid_list)])
+
+# pd.Series(results).describe()
 
 
-results
+# # let's definitively find the real best params grid
 
 
-_results = results.describe().T.sort_values(by="mean", axis=0)
-_results
+# params_grid_list = [{i : [j] for i, j in 
+#                          zip(BEST_PARAMS.loc[k, :].index, BEST_PARAMS.loc[k, :].values) if i != "lolo"}
+#                         for k in BEST_PARAMS.index]
+
+# params_grid_list
 
 
-best_params = params_grid_list[2]
-best_params
+# n = 40
+# results = [[run_GSCV(LogisticRegression, p)[0] for p in params_grid_list] for i in range(n)]
+# results = pd.DataFrame(results, columns = [str("pg_"+str(i)) for i,j in enumerate(params_grid_list)])
 
 
-# let's try our theorical best model (feat eng. scoring...)
-
-_df = standscale(delete_outliers(df,1.3))
-
-n = 40
-results = [run_GSCV(LogisticRegression, best_params, _df, scoring="roc_auc", cv=10, test_size=0.33)[0] for i in range(n)]
+# results
 
 
-pd.Series(results).describe()
+# _results = results.describe().T.sort_values(by="mean", axis=0)
+# _results
 
 
-#####################################################################################################
-#####################################################################################################
-
-# 04-making_submission.py
-
-#####################################################################################################
-#####################################################################################################
+# best_params = params_grid_list[2]
+# best_params
 
 
-# rferfre
-# ccdsdcds
-# cdcdscdscs
-# cddscdscsdc
+# # let's try our theorical best model (feat eng. scoring...)
+
+# _df = standscale(delete_outliers(df,1.3))
+
+# n = 40
+# results = [run_GSCV(LogisticRegression, best_params, _df, scoring="roc_auc", cv=10, test_size=0.33)[0] for i in range(n)]
 
 
-# import 
-
-# from finding_good_models import * 
+# pd.Series(results).describe()
 
 
-p = {   "solver"            : ["liblinear"],
-        "class_weight"      : [None], 
-        "dual"              : [False],
-        "intercept_scaling" : [1],
-        "fit_intercept"     : [True],
-        "C"                 : [10],
-        "tol"               : [0.00001],
-        "max_iter"          : [100],
-        "warm_start"        : [False],
-        "penalty"           : ["l2"],
-        "multi_class"       : ["ovr"],  }
+# #####################################################################################################
+# #####################################################################################################
+
+# # 04-making_submission.py
+
+# #####################################################################################################
+# #####################################################################################################
+
+
+# # rferfre
+# # ccdsdcds
+# # cdcdscdscs
+# # cddscdscsdc
+
+
+# # import 
+
+# # from finding_good_models import * 
+
+
+p ={ 'penalty': ['l1'],
+     'tol': [0.001],
+     'class_weight': [None],
+     'max_iter': [100],
+     'intercept_scaling': [1],
+     'multi_class': ['ovr'],
+     'solver': ['liblinear'],
+     'C': [1],
+     'warm_start': [True],
+     'dual': [False],
+     'fit_intercept': [True]}
 
 
 params = p
 
 
-# warm up
+# # warm up
 
-df          = build_df(DATA, TRAIN_FILE)
-df          = standscale(df)
+df          = build_df(DATA,  TRAIN_FILE)
+df          = delete_outliers(df, 1.4) 
+
 model       = LogisticRegression()
 
-lolo, grid  = run_GSCV(      model       = model,     
-                             params      = params, 
-                             df          = df,        
-                             cv          = 10, 
-                             n_jobs      = 6,    
-                             scoring     = "average_precision",
-                             verbose     = 1,   
-                             test_size   = 0.33)
+lolo,
+     grid  = run_GSCV(       model       = model,
+                              params      = params, 
+                              df          = df,        
+                              cv          = 10, 
+                              n_jobs      = 6,    
+                              scoring     = "average_precision",
+                              verbose     = 1,   
+                              test_size   = 0.33)
 
 print(lolo)
 print(grid)
 
 
-# training
+# # training
 
 train_df    = build_df(DATA, TRAIN_FILE)
-train_df    = standscale(train_df)
+train_df    = delete_outliers(train_df, 1.4)
+
 
 X,y         = return_X_y(train_df)
 grid        = GridSearchCV( estimator   = model, 
@@ -2269,20 +2373,21 @@ grid.fit(X,y)
 # predicting
 
 test_df     = build_df(DATA, TEST_FILE)
-test_df     = standscale(test_df)
-
 y_pred      = grid.predict_proba(test_df)
 y_pred      = y_pred[:,1]
+_y_pred     = clipping_log_loss(y_pred, x=0.07)
+_y_pred     = np.array(_y_pred)
 
 
-y_pred      = pd.Series(y_pred, name="Made Donation in March 2007", index = test_df.index, dtype=np.float64)
+
+_y_pred      = pd.Series(y_pred, name="Made Donation in March 2007", index = test_df.index, dtype=np.float64)
 path        = finding_master_path("submissions", PROJECT)
 path        += "submission0.csv"
-y_pred.to_csv(  path, index=True, header=True, index_label="")
+_y_pred.to_csv(  path, index=True, header=True, index_label="")
 
 print("done")
 
 
-from IPython.display import Image
-Image("../head.png")
+# from IPython.display import Image
+# Image("../head.png")
 

@@ -3,27 +3,35 @@ model :   <class 'sklearn.linear_model.logistic.LogisticRegression'>
 params :  {'penalty': ['l1', 'l2'], 'dual': [True, False], 'tol': [0.0001, 0.001], 'C': [0.01, 0.1, 1, 10], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'], 'max_iter': [100], 'multi_class': ['ovr', 'multinomial'], 'warm_start': [True, False]}      
 n :       10      
 meth :    <function _mix at 0x7fc608eff2f0>      
+
+
+
+0.47,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
+0.485,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
+0.479,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
+0.472,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
+0.472,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
+0.487,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [10], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
+0.482,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [10], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
+0.48,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
+
+
+
 0.52,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.01], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
 0.516,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.01], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
 0.504,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.01], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
 0.496,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.01], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
 0.56,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.01], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [True]}
 0.552,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.01], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [False]}
-0.48,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
 0.5,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
 0.508,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
-0.472,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
 0.536,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [True]}
 0.53,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [False]}
-0.479,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
-0.472,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
 0.509,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
 0.496,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
 0.537,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [True]}
 0.53,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [False]}
-0.482,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [10], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
 0.494,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [10], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
-0.487,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [10], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
 0.514,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [10], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
 0.532,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [10], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [True]}
 0.529,{'penalty': ['l1'], 'dual': [False], 'tol': [0.0001], 'C': [10], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [False]}
@@ -33,10 +41,9 @@ meth :    <function _mix at 0x7fc608eff2f0>
 0.508,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [0.01], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
 0.559,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [0.01], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [True]}
 0.558,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [0.01], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [False]}
-0.485,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
 0.504,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
 0.481,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
 0.505,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [False]}
 0.532,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [True]}
 0.538,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [0.1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['saga'], 'max_iter': [100], 'multi_class': ['multinomial'], 'warm_start': [False]}
-0.47,{'penalty': ['l1'], 'dual': [False], 'tol': [0.001], 'C': [1], 'fit_intercept': [True], 'intercept_scaling': [1], 'class_weight': [None], 'solver': ['liblinear'], 'max_iter': [100], 'multi_class': ['ovr'], 'warm_start': [True]}
+
